@@ -2,26 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+@import "fonts";
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    color: #5a5a4a;
 }
+
+@media screen and (max-width: 1920px) {
+    .sidebar {
+        @apply xl:mr-32;
+    }
+}
+
+.bar-left {
+    @apply before:content-[''] before:absolute before:inset-0 before:right-auto before:w-[64px] before:bg-black/50 before:z-10;
+}
+
+.bar-left\/50 {
+    @apply before:content-[''] before:absolute before:inset-0 before:right-auto before:w-[64px] before:bg-black/10 before:z-10;
+}
+
+.cover-gradient {
+    @apply after:content-[''] after:absolute after:inset-0 after:top-auto after:h-[256px] after:bg-gradient-to-b after:from-transparent after:to-black/90 after:z-10;
+}
+
+.inline-link {
+    @apply pb-[3px] inline-block text-current text-[14px] tracking-[0.04em] font-bold border-b border-b-bright-sun-400 hover:bg-bright-sun-400 hover:border-b-bright-sun-800 transition-all;
+}
+
+.inline-link:disabled {
+    @apply text-black/25 border-b-transparent pointer-events-none;
+}
+
+.prose a {
+    @apply border-b border-b-bright-sun-400 hover:bg-bright-sun-400 hover:border-b-bright-sun-800 no-underline transition-all;
+}
+
+.inline-btn {
+    @apply mr-[6px] mb-[6px] inline-block text-current text-[12px] tracking-[0.04em] py-1 px-2 border-b border-b-bright-sun-600 bg-bright-sun-400 rounded hover:bg-bright-sun-500 hover:border-b-bright-sun-700 transition-all;
+}
+
+.prose blockquote.prose-quoteless p:first-of-type::before,
+.prose blockquote.prose-quoteless p:first-of-type::after {
+    display: none;
+}
+
+.prose blockquote {
+    @apply relative border-l-2 border-l-amber-400;
+}
+
+.prose blockquote cite {
+    @apply block text-right;
+}
+
+.author-card {
+    @apply top-8;
+}
+
+.author-card::before {
+    content: '';
+    @apply absolute -top-8 -left-4 -bottom-12 -right-4;
+    background-image: linear-gradient(to bottom, theme('colors.amber.50') 0%, theme('colors.amber.50') 75%, transparent 100%);
+}
+
+.author-card > * {
+    @apply relative;
+}
+
+.tooltip-br > .tippy-content {
+    @apply bg-blue-600 text-white rounded-none;
+}
+.tooltip-br > .tippy-arrow {
+    @apply !left-auto !right-0 !transform-none;
+}
+.tooltip-br[data-placement="top-end"] > .tippy-arrow {
+    @apply !top-full;
+}
+.tooltip-br > .tippy-arrow::before {
+    @apply !left-auto !right-0 !w-0 !h-0 !border !border-t-0 !border-r-0 !border-b-[8px] !border-l-[8px] !border-t-transparent !border-r-transparent !border-b-blue-600 !border-l-transparent;
+}
+.tooltip-br[data-placement="top-end"] > .tippy-arrow::before {
+    @apply !top-0 !border-r-[8px] !border-l-0 !border-r-blue-600 !border-b-transparent;
+}
+
+.prose-dropcap > p:first-of-type:first-letter {
+    margin-top: 0.05em;
+    margin-right: 10px;
+    font-size: 3.45rem;
+    font-style: normal;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px theme('colors.amber.50'), 2px 2px 0px theme('colors.bright-sun.400');
+    line-height: 100%;
+    float: left;
+}
+@supports (-webkit-initial-letter: 2) or (initial-letter: 2) {
+	.prose-dropcap > p:first-of-type:first-letter {
+        margin-top: 0;
+        -webkit-initial-letter-align: auto;
+        initial-letter-align: auto;
+		-webkit-initial-letter: 2;
+		initial-letter: 2;
+        float: none;
+	}
+}
+
+@supports (-moz-appearance:none) {
+    .prose-dropcap > p:first-of-type:first-letter {
+        margin-top: 0.15em;
+        -webkit-initial-letter: 2;
+        initial-letter: 2;
+    }
+}
+
+.spinner_V8m1 {
+    transform-origin: center;
+    animation: spinner_zKoa 2s linear infinite;
+}
+.spinner_V8m1 circle {
+    stroke-linecap: round;
+    animation: spinner_YpZS 1.5s ease-in-out infinite;
+}
+@keyframes spinner_zKoa {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes spinner_YpZS {
+    0% {
+        stroke-dasharray: 0 150;
+        stroke-dashoffset: 0;
+    }
+    47.5% {
+        stroke-dasharray: 42 150;
+        stroke-dashoffset: -16;
+    }
+    95%,
+    100% {
+        stroke-dasharray: 42 150;
+        stroke-dashoffset: -59;
+    }
+}
+
+@import "bookmarks";
