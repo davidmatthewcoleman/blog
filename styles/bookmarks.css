@@ -144,16 +144,6 @@
         position: static !important;
         height: auto !important;
     }
-    .bookmark-thumbnail:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 45px;
-        background-color: rgba(0,0,0,0.25);
-        z-index: 1;
-    }
     .bookmark-content {
         order: 2;
     }
