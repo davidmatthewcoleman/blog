@@ -69,8 +69,8 @@ function Blocks({ data }: { data: any }) {
                                         src={{
                                             '': [
                                                 {
-                                                    width: block.attrs.width ? block.attrs.width.replace('px','') : 0,
-                                                    height: block.attrs.height ? block.attrs.height.replace('px','') : 0
+                                                    width: block.attrs.width ? parseInt(block.attrs.width, 10) : 0,
+                                                    height: block.attrs.height ? parseInt(block.attrs.height, 10) : 0
                                                 }
                                             ]
                                         }}
@@ -91,8 +91,8 @@ function Blocks({ data }: { data: any }) {
                                 <WpImage url={block.media_source} src={{
                                     '': [
                                         {
-                                            width: blockWidth.replace('px',''),
-                                            height: block.attrs.height ? block.attrs.height.replace('px','') : 0
+                                            width: parseInt(blockWidth),
+                                            height: block.attrs.height ? parseInt(block.attrs.height, 10) : 0
                                         }
                                     ]
                                 }} className={blockImgClass} alt={block.title} focalPoint={[50,50]} props={``} />
@@ -215,7 +215,7 @@ function Blocks({ data }: { data: any }) {
                                             '': [
                                                 {
                                                     width: 1024,
-                                                    height: block.attrs.height ? block.attrs.height.replace('px','') : 0
+                                                    height: block.attrs.height ? parseInt(block.attrs.height, 10) : 0
                                                 }
                                             ]
                                         }} className={``} alt={block.title} focalPoint={[50,50]} props={``} />
