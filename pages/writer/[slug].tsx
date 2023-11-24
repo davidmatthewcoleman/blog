@@ -6,7 +6,7 @@ import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
 
-function Writer({menu, options, latestPosts, allPosts, writer}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any}) {
+function Writer({menu, options, latestPosts, allPosts, writer, instagramFeed}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any, instagramFeed: any}) {
     return (
         <>
             <Head>
@@ -50,6 +50,7 @@ function Writer({menu, options, latestPosts, allPosts, writer}: {menu: any, opti
                         <strong className={`font-bold`}>Writer:</strong>&nbsp;{writer[0].name}
                     </div>
                 )}
+                instagramFeed={instagramFeed}
                 options={options}/>
             </main>
         </>
@@ -75,12 +76,13 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, writer] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, writer, instagramFeed] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[author_name]=${params.slug}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/instagram/${process.env.INSTAGRAM_USERNAME}`).then(res => res.json()),
     ]);
 
     return {
@@ -90,6 +92,7 @@ export async function getStaticProps({ params }: any) {
             latestPosts,
             allPosts,
             writer,
+            instagramFeed
         },
         revalidate: 300,
     };

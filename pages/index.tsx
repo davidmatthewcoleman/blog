@@ -3,8 +3,9 @@ import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import React from "react";
+import InstagramFeed from "@/components/instagramFeed";
 
-function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
+function Home({menu, options, latestPosts, allPosts, instagramFeed}: {menu: any, options: any, latestPosts: any, allPosts: any, instagramFeed: any}) {
   return (
       <>
           <Head>
@@ -43,7 +44,7 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
           />
           <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
               <Header menu={menu} options={options} latestPosts={latestPosts} />
-              <PostList allPosts={allPosts} header={false} options={options} />
+              <PostList allPosts={allPosts} header={false} options={options} instagramFeed={instagramFeed} />
           </main>
       </>
   )
@@ -54,11 +55,12 @@ export async function getStaticProps() {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, instagramFeed] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/instagram/${process.env.INSTAGRAM_USERNAME}`).then(res => res.json()),
     ]);
 
     return {
@@ -66,7 +68,8 @@ export async function getStaticProps() {
             menu,
             options,
             latestPosts,
-            allPosts
+            allPosts,
+            instagramFeed
         },
         revalidate: 300,
     };

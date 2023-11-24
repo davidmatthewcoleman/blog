@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost','secure.davidmc.io'],
+    domains: ['secure.davidmc.io','*.cdninstagram.com'],
   },
   experimental: {
     scrollRestoration: true,
@@ -11,7 +11,8 @@ const nextConfig = {
   env: {
     WORDPRESS_HOST: process.env.WORDPRESS_HOST,
     FRONTEND_HOST: process.env.FRONTEND_HOST,
-    IMGIX_HOST: process.env.IMGIX_HOST
+    IMGIX_HOST: process.env.IMGIX_HOST,
+    INSTAGRAM_USERNAME: process.env.INSTAGRAM_USERNAME
   },
 }
 
