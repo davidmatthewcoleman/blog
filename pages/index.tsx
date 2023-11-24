@@ -2,21 +2,22 @@ import WpImage from "@/components/wpImage";
 import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
+import React from "react";
 
 function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
   return (
       <>
           <Head>
               <title>{options.name} &ndash; {options.description}</title>
-              <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-              <link rel="manifest" href="/icons/site.webmanifest" />
-              <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000" />
-              <link rel="shortcut icon" href="/icons/favicon.ico" />
+              <link rel="apple-touch-icon" sizes="180x180" href="@/public/icons/apple-touch-icon.png" />
+              <link rel="icon" type="image/png" sizes="32x32" href="@/public/icons/favicon-32x32.png" />
+              <link rel="icon" type="image/png" sizes="16x16" href="@/public/icons/favicon-16x16.png" />
+              <link rel="manifest" href="@/public/icons/site.webmanifest" />
+              <link rel="mask-icon" href="@/public/icons/safari-pinned-tab.svg" color="#000000" />
+              <link rel="shortcut icon" href="@/public/icons/favicon.ico" />
               <meta name="msapplication-TileColor" content="#000000" />
-              <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
-              <meta name="msapplication-config" content="/icons/browserconfig.xml" />
+              <meta name="msapplication-TileImage" content="@/public/icons/mstile-144x144.png" />
+              <meta name="msapplication-config" content="@/public/icons/browserconfig.xml" />
               <meta name="theme-color" content="#000000" />
           </Head>
           <WpImage
