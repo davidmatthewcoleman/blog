@@ -151,7 +151,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 {options.description}
                             </p>
                             <hr
-                                className={`w-1/2 mt-0 mx-auto mb-6 h-1.5 bg-white/10 border-none`}
+                                className={`w-1/2 mt-0 mx-auto mb-6 h-1.5 bg-white/10 border-none rounded-sm`}
                             />
                             <p
                                 className={`max-w-max mt-0 mx-auto mb-4 text-lg text-white/50`}

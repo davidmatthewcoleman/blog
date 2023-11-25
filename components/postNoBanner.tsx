@@ -53,7 +53,7 @@ function PostNoBanner({data, single}: {data: any, single: boolean}) {
                         >
                             <span className={`pointer-events-auto max-w-max`} dangerouslySetInnerHTML={{ __html: data.title.rendered }}></span>
                             {data.subtitle && (
-                                <span className={`block text-md xl:text-xl !italic font-serif pointer-events-auto max-w-max`} dangerouslySetInnerHTML={{ __html: data.subtitle.rendered }}></span>
+                                <span className={`block text-lg xl:text-2xl !italic font-serif pointer-events-auto max-w-max`} dangerouslySetInnerHTML={{ __html: data.subtitle.rendered }}></span>
                             )}
                         </Link>
                     )}

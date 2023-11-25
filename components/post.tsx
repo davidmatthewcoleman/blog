@@ -110,7 +110,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                         />
                     </>
                 )}
-                <svg viewBox="0 0 20 20" width={20} height={20} className={`absolute inset-0 top-auto ${data.subtitle ? 'mb-[2.25em]' : 'mb-11'} ${single ? '' : 'bottom-0.5'} mx-[14px] xl:mx-[22px] fill-current z-30`}>
+                <svg viewBox="0 0 20 20" width={20} height={20} className={`absolute inset-0 top-auto ${data.subtitle ? 'mb-9' : ( single ? 'mb-11' : 'mb-10' ) } mx-[14px] xl:mx-[22px] fill-current z-30`}>
                     <path d={data.type === 'post' ? 'M18 3v2H2V3h16zm-6 4v2H2V7h10zm6 0v2h-4V7h4zM8 11v2H2v-2h6zm10 0v2h-8v-2h8zm-4 4v2H2v-2h12z' : 'M3 1v18h14V1H3zm9 13H6v-1h6v1zm2-3H6v-1h8v1zm0-3H6V7h8v1zm0-3H6V4h8v1z'} />
                 </svg>
                 <div
@@ -132,7 +132,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                         </span>
                     ) : (
                         <Link
-                            className={`post-link relative block text-4xl [&>span:first-of-type]:opacity-100 [&>span:first-of-type]:hover:opacity-0 [&>span:last-of-type]:opacity-0 [&>span:last-of-type]:hover:opacity-100 [&>span]:transition-all font-sans leading-tight transition-all drop-shadow pointer-events-none`}
+                            className={`post-link relative block text-3xl xl:text-4xl [&>span:first-of-type]:opacity-100 [&>span:first-of-type]:hover:opacity-0 [&>span:last-of-type]:opacity-0 [&>span:last-of-type]:hover:opacity-100 [&>span]:transition-all font-sans leading-tight transition-all drop-shadow pointer-events-none`}
                             href={`/${data.slug}`}
                         >
                             <span className={`inline-block`}>

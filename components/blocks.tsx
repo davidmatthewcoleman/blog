@@ -137,7 +137,7 @@ function Blocks({ data }: { data: any }) {
                 return (
                     <hr
                         id={`block-${block.uuid}`}
-                        className="w-1/4 h-[2px] my-16 mx-auto border-none bg-black/25"
+                        className="w-auto h-[2px] my-8 -mx-6 xl:-mx-8 border-none bg-black/10"
                         key={block.uuid}
                     />
                 );
