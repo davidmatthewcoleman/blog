@@ -21,7 +21,7 @@ const Nav = ({ menu }: { menu: any }) => {
                 className={`relative block leading-loose text-bright-sun-400 pr-2 hover:text-black hover:bg-bright-sun-400 hover:pl-4 transition-[all]`}
             >
                 {item.menu_item_parent > 0 && (
-                    <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-1.5 fill-white/10`}>
+                    <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-[0.475rem] scale-75 fill-white/10`}>
                         <path d="M173 552h318v173H0V0h173v552Z"/>
                     </svg>
                 )}
