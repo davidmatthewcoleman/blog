@@ -21,7 +21,7 @@ function PostNoBanner({data, single}: {data: any, single: boolean}) {
         <section
             className={`relative post flex flex-col [&>hr]:first-of-type:hidden [&_header]:first-of-type:mt-24 bar-left/50 before:w-[48px] xl:before:w-[64px] bg-amber-50 z-10`}
         >
-            <hr className={`border-b border-b-black/10 ml-[48px] xl:ml-[64px]`}/>
+            <hr className={`border-t-0 border-b-2 border-b-black/10 ml-[48px] xl:ml-[64px]`}/>
             <header
                 className={`relative`}
             >
@@ -59,7 +59,7 @@ function PostNoBanner({data, single}: {data: any, single: boolean}) {
                     )}
                 </div>
                 {single && (
-                    <hr className={`border-b border-b-black/10 ml-[48px] xl:ml-[64px]`}/>
+                    <hr className={`border-t-0 border-b-2 border-b-black/10 ml-[48px] xl:ml-[64px]`}/>
                 )}
             </header>
             {!single && (
