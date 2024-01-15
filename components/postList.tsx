@@ -57,7 +57,7 @@ function PostList({ allPosts, header, options, instagramFeed }: { allPosts: any,
                     return <PostNoBanner key={post.id} data={post} single={false} />;
                 }
             })}
-            <InstagramFeed feed={instagramFeed} />
+            {/*<InstagramFeed feed={instagramFeed} />*/}
             <Footer loadMore={visiblePosts < allPosts.length && (
                     <button className={`inline-link inline-block !p-0 uppercase`} onClick={loadMorePosts} disabled={loadingMore}>
                         {loadingMore ? (
