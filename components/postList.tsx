@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Post from '@/components/post';
 import PostNoBanner from '@/components/postNoBanner';
 import Footer from "@/components/footer";
-import InstagramFeed from "@/components/instagramFeed";
 
 function PostList({ allPosts, header, options }: { allPosts: any, header: any, options: any}) {
     const [visiblePosts, setVisiblePosts] = useState(8);

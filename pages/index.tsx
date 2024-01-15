@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import React from "react";
-import InstagramFeed from "@/components/instagramFeed";
 
 function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
   return (
