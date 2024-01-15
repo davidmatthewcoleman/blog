@@ -22,10 +22,10 @@ function PostList({ allPosts, header, options }: { allPosts: any, header: any, o
     const prevPage = () => {
         if (currentPage > 1) {
             const prevPageNumber = currentPage - 1;
-            // @ts-ignore
-            router.push(prevPageNumber === 1 ? '/' : '/', undefined, { query: { page: prevPageNumber } });
+            router.push({ pathname: '/', query: { page: prevPageNumber } });
         }
     };
+
 
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
