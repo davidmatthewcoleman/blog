@@ -14,6 +14,14 @@ const nextConfig = {
     IMGIX_HOST: process.env.IMGIX_HOST,
     INSTAGRAM_USERNAME: process.env.INSTAGRAM_USERNAME
   },
+  async rewrites() {
+    return [
+      {
+        source: '/page/:page',
+        destination: '/?page=:page',
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

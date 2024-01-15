@@ -1,76 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Post from '@/components/post';
 import PostNoBanner from '@/components/postNoBanner';
 import Footer from "@/components/footer";
+import { useRouter } from 'next/router'; // Import useRouter for handling URL navigation
 
-function PostList({ allPosts, header, options }: { allPosts: any, header: any, options: any}) {
-    const [visiblePosts, setVisiblePosts] = useState(8);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [manualLoad, setManualLoad] = useState(false);
+function PostList({ allPosts, header, options }: { allPosts: any, header: any, options: any }) {
+    const router = useRouter(); // Initialize useRouter
+    const currentPage = router.query.page ? parseInt(router.query.page as string) : 1;
+    const postsPerPage = 8;
 
-    const loadMorePosts = () => {
-        setLoadingMore(true);
-        // Simulate an asynchronous data fetch, replace this with your actual data fetching logic
-        setTimeout(() => {
-            setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 8);
-            setLoadingMore(false);
-            setManualLoad(true);
-        }, 1000);
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(allPosts.length / postsPerPage);
+
+    const nextPage = () => {
+        const nextPageNumber = currentPage + 1;
+        if (nextPageNumber <= totalPages) {
+            router.push({ pathname: '/', query: { page: nextPageNumber } });
+        }
     };
 
-    useEffect(() => {
-        // Attach the scroll event listener when the component mounts
-        const handleScroll = () => {
-            if (!manualLoad) {
-                const windowHeight = 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
-                const body = document.body;
-                const html = document.documentElement;
-                const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const prevPage = () => {
+        if (currentPage > 1) {
+            const prevPageNumber = currentPage - 1;
+            // @ts-ignore
+            router.push(prevPageNumber === 1 ? '/' : '/', undefined, { query: { page: prevPageNumber } });
+        }
+    };
 
-                const windowBottom = windowHeight + window.pageYOffset;
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    const displayedPosts = allPosts.slice(startIndex, endIndex);
 
-                if (windowBottom >= docHeight && !loadingMore) {
-                    // User has scrolled to the bottom, load more posts only if manualLoad is true
-                    if (manualLoad) {
-                        loadMorePosts();
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            // Remove the scroll event listener when the component unmounts
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [manualLoad, loadingMore]); // Include manualLoad and loadingMore in the dependency array
+    console.log(currentPage);
 
     return (
         <section className={`post-list relative flex flex-col w-full bg-amber-50 bar-left/50 before:w-[48px] xl:before:w-[64px]`}>
             {header}
-            {allPosts.slice(0, visiblePosts).map((post: any) => {
+            {displayedPosts.map((post: any) => {
                 if (post.featured_media !== false) {
                     return <Post key={post.id} data={post} single={false} />;
                 } else {
                     return <PostNoBanner key={post.id} data={post} single={false} />;
                 }
             })}
-            <Footer loadMore={visiblePosts < allPosts.length && (
-                    <button className={`inline-link inline-block !p-0 uppercase`} onClick={loadMorePosts} disabled={loadingMore}>
-                        {loadingMore ? (
-                            <>
-                                <span className={`relative`}>Loading&hellip;</span>
-                                <svg className={`relative bottom-px inline stroke-black ml-0.5`} width={16} height={16} viewBox="0 0 24 24"><g className="spinner_V8m1"><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3"></circle></g></svg>
-                            </>
-                        ) : (
-                            <>
-                                <span className={`relative`}>Load More</span>
-                                <svg className={`relative bottom-px inline fill-black ml-0.5`} width={16} height={16} viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
-                            </>
-                        )}
-                    </button>
-                )} options={options}/>
+            <Footer loadMore={totalPages > 1 && (
+                <>
+                    {/* Newer Entries button */}
+                    {currentPage > 1 && (
+                        <button className={`inline-link inline-block !p-0 uppercase`} onClick={prevPage}>
+                            Newer Entries
+                        </button>
+                    )}
+                    {(currentPage > 1 && currentPage < totalPages) && (
+                        <span className={`inline-link inline-block !p-0 mx-2 opacity-25`}>/</span>
+                    )}
+                    {/* Older Entries button */}
+                    {currentPage < totalPages && (
+                        <button className={`inline-link inline-block !p-0 uppercase`} onClick={nextPage}>
+                            Older Entries
+                        </button>
+                    )}
+                </>
+            )} options={options} />
         </section>
     );
 }

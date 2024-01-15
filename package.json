@@ -16,6 +16,7 @@
     "date-fns-tz": "^2.0.0",
     "html-react-parser": "^5.0.6",
     "isomorphic-dompurify": "^1.9.0",
+    "lodash": "^4.17.21",
     "next": "14.0.1",
     "query-string": "^8.1.0",
     "react": "^18",
@@ -29,6 +30,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
