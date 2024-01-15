@@ -7,7 +7,7 @@ import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 
-function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, instagramFeed}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, instagramFeed: any}) {
+function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any}) {
     console.log('Breadcrumb: ' + JSON.stringify(breadcrumb));
 
     return (
@@ -69,7 +69,6 @@ function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, instagr
                         ))}
                     </div>
                 )}
-                instagramFeed={instagramFeed}
                 options={options}
                 />
             </main>
@@ -96,13 +95,12 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, topic, instagramFeed] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, topic] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999&slug=${params.slug}&_embed`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/instagram/${process.env.INSTAGRAM_USERNAME}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999&slug=${params.slug}&_embed`).then(res => res.json())
     ]);
 
     const [breadcrumb] = await Promise.all([
@@ -116,8 +114,7 @@ export async function getStaticProps({ params }: any) {
             latestPosts,
             allPosts,
             topic,
-            breadcrumb,
-            instagramFeed
+            breadcrumb
         },
         revalidate: 300,
     };

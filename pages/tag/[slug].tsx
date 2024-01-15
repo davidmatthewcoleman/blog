@@ -6,7 +6,7 @@ import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
 
-function Tag({menu, options, latestPosts, allPosts, tag, instagramFeed}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, instagramFeed: any}) {
+function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any}) {
     return (
         <>
             <Head>
@@ -50,7 +50,6 @@ function Tag({menu, options, latestPosts, allPosts, tag, instagramFeed}: {menu: 
                         <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
                     </div>
                 )}
-                instagramFeed={instagramFeed}
                 options={options}
                 />
             </main>
@@ -79,13 +78,12 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, tag, instagramFeed] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, tag] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?filter[taxonomy]=post_tag&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/instagram/${process.env.INSTAGRAM_USERNAME}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
     return {
@@ -94,8 +92,7 @@ export async function getStaticProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
-            tag,
-            instagramFeed
+            tag
         },
         revalidate: 300,
     };
