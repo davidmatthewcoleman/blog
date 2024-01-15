@@ -4,7 +4,7 @@ import PostNoBanner from '@/components/postNoBanner';
 import Footer from "@/components/footer";
 import InstagramFeed from "@/components/instagramFeed";
 
-function PostList({ allPosts, header, options, instagramFeed }: { allPosts: any, header: any, options: any, instagramFeed: any }) {
+function PostList({ allPosts, header, options }: { allPosts: any, header: any, options: any}) {
     const [visiblePosts, setVisiblePosts] = useState(8);
     const [loadingMore, setLoadingMore] = useState(false);
     const [manualLoad, setManualLoad] = useState(false);
@@ -57,7 +57,6 @@ function PostList({ allPosts, header, options, instagramFeed }: { allPosts: any,
                     return <PostNoBanner key={post.id} data={post} single={false} />;
                 }
             })}
-            {/*<InstagramFeed feed={instagramFeed} />*/}
             <Footer loadMore={visiblePosts < allPosts.length && (
                     <button className={`inline-link inline-block !p-0 uppercase`} onClick={loadMorePosts} disabled={loadingMore}>
                         {loadingMore ? (
