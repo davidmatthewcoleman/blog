@@ -43,7 +43,7 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
           />
           <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
               <Header menu={menu} options={options} latestPosts={latestPosts} />
-              <PostList allPosts={allPosts} header={false} options={options} />
+              <PostList allPosts={allPosts} header={false} options={options} pageNumber={1} />
           </main>
       </>
   )

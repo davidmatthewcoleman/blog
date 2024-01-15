@@ -58,7 +58,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
     const handleSearch = () => {
         // Replace spaces with '+' in the search query
         const formattedQuery = searchQuery.split(' ').join('+');
-        // Use the router to push the new URL without reloading the page
+        // Use the router to push the new URL without reloading the [slug]
         router.push(`/search/${formattedQuery}`);
     };
 

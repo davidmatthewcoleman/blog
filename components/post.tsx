@@ -157,7 +157,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                 >
                     <div
                         className={`mt-8 ml-[72px] xl:ml-[96px] mb-2 mr-6 xl:w-1/2 text-lg`}
-                        dangerouslySetInnerHTML={{ __html: data.description.rendered }}
+                        dangerouslySetInnerHTML={{ __html: data.description?.rendered }}
                     />
                     <Link
                         className={`inline-link inline-block ml-[72px] xl:ml-[96px] mb-8 uppercase font-sans`}

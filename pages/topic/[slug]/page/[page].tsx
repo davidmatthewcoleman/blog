@@ -1,16 +1,17 @@
+import React from "react";
 import Image from 'next/image'
 
+import Link from "next/link";
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
-import React from "react";
 
-function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any}) {
+function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, pageNumber: number}) {
     return (
         <>
             <Head>
-                <title>{tag[0].name} &ndash; {options.name}</title>
+                <title>{topic[0].name} &ndash; {options.name}</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -47,9 +48,26 @@ function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: a
                 <Header menu={menu} options={options} latestPosts={latestPosts} />
                 <PostList allPosts={allPosts} header={(
                     <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
-                        <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
+                        <strong className={`font-bold`}>Topic:</strong>&nbsp;
+                        {breadcrumb.map((item: any) => (
+                            item.current ? (
+                                <span key={item.id}>
+                                    {item.name}
+                                </span>
+                            ) : (
+                                <React.Fragment key={item.id}>
+                                    <Link href={`/topic/${item.slug}`}>
+                                        {item.name}
+                                    </Link>
+                                    <svg viewBox="0 0 24 24" width={16} height={16} className={`relative bottom-[2px] inline-block mx-0.5 fill-current opacity-50`}>
+                                        <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                                    </svg>
+                                </React.Fragment>
+                            )
+                        ))}
                     </div>
                 )}
+                pageNumber={pageNumber}
                 options={options}
                 />
             </main>
@@ -58,14 +76,30 @@ function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: a
 }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999`);
-    const tags = await res.json();
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999`);
+    const topics = await res.json();
 
-    const paths = tags.map((tag: any) => ({
-        params: { slug: tag.slug },
-    }));
+    const paths = [];
 
-    console.log(paths);
+    for (const topic of topics) {
+        if (!topic.slug) {
+            continue; // Skip if slug is undefined
+        }
+
+        // Fetch the total number of posts for the topic
+        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${topic.slug}`);
+        const posts = await resPosts.json();
+        const totalPagesPerTopic = Math.ceil(posts.length / 8);
+
+        for (let pageNumber = 1; pageNumber <= totalPagesPerTopic; pageNumber++) {
+            paths.push({
+                params: {
+                    slug: topic.slug,
+                    page: pageNumber.toString()
+                }
+            });
+        }
+    }
 
     return {
         paths,
@@ -74,16 +108,23 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: any) {
+    const { slug, page } = params;
+    const pageNumber = parseInt(page, 10);
+
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, tag] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, topic] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?filter[taxonomy]=post_tag&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${params.slug}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999&slug=${params.slug}&_embed`).then(res => res.json())
+    ]);
+
+    const [breadcrumb] = await Promise.all([
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
     ]);
 
     return {
@@ -92,10 +133,12 @@ export async function getStaticProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
-            tag
+            topic,
+            breadcrumb,
+            pageNumber
         },
         revalidate: 300,
     };
 }
 
-export default Tag;
+export default Topic;

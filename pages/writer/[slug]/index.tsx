@@ -1,19 +1,16 @@
-import React from "react";
 import Image from 'next/image'
 
-import Link from "next/link";
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
+import React from "react";
 
-function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any}) {
-    console.log('Breadcrumb: ' + JSON.stringify(breadcrumb));
-
+function Writer({menu, options, latestPosts, allPosts, writer}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any}) {
     return (
         <>
             <Head>
-                <title>{topic[0].name} &ndash; {options.name}</title>
+                <title>{writer[0].name} &ndash; {options.name}</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -50,38 +47,22 @@ function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb}: {menu:
                 <Header menu={menu} options={options} latestPosts={latestPosts} />
                 <PostList allPosts={allPosts} header={(
                     <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
-                        <strong className={`font-bold`}>Topic:</strong>&nbsp;
-                        {breadcrumb.map((item: any) => (
-                            item.current ? (
-                                <span key={item.id}>
-                                    {item.name}
-                                </span>
-                            ) : (
-                                <React.Fragment key={item.id}>
-                                    <Link href={`/topic/${item.slug}`}>
-                                        {item.name}
-                                    </Link>
-                                    <svg viewBox="0 0 24 24" width={16} height={16} className={`relative bottom-[2px] inline-block mx-0.5 fill-current opacity-50`}>
-                                        <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-                                    </svg>
-                                </React.Fragment>
-                            )
-                        ))}
+                        <strong className={`font-bold`}>Writer:</strong>&nbsp;{writer[0].name}
                     </div>
                 )}
-                options={options}
-                />
+                pageNumber={1}
+                options={options}/>
             </main>
         </>
     )
 }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999`);
-    const topics = await res.json();
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?per_page=9999`);
+    const authors = await res.json();
 
-    const paths = topics.map((topic: any) => ({
-        params: { slug: topic.slug },
+    const paths = authors.map((author: any) => ({
+        params: { slug: author.slug },
     }));
 
     return {
@@ -95,16 +76,12 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, topic] = await Promise.all([
+    const [menu, options, latestPosts, allPosts, writer] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999&slug=${params.slug}&_embed`).then(res => res.json())
-    ]);
-
-    const [breadcrumb] = await Promise.all([
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[author_name]=${params.slug}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`).then(res => res.json())
     ]);
 
     return {
@@ -113,11 +90,10 @@ export async function getStaticProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
-            topic,
-            breadcrumb
+            writer
         },
         revalidate: 300,
     };
 }
 
-export default Topic;
+export default Writer;
