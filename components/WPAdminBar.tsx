@@ -32,7 +32,7 @@ const WPAdminBar = () => {
     }, [router.isReady, router.asPath]);
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
 
