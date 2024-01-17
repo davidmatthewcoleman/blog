@@ -38,6 +38,10 @@ export default async (req: any, res: any) => {
     const $ = cheerio.load(html);
     const wpAdminBarElement = $('#wpadminbar');
 
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     // Send the admin bar HTML or a not found message
     if (wpAdminBarElement.length > 0) {
       const adminBarHtml = wpAdminBarElement.html();
