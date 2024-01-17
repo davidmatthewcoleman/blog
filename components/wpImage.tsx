@@ -17,7 +17,8 @@ const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, sr
                             height={media.height}
                             imgixParams={{
                                 "fp-x": focalPointX,
-                                "fp-y": focalPointY
+                                "fp-y": focalPointY,
+                                "fm": "avif"
                             }}
                             htmlAttributes={{ media: mediaQuery, type: 'image/avif' }}
                             disableLibraryParam={true}
@@ -31,7 +32,8 @@ const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, sr
                             height={media.height}
                             imgixParams={{
                                 "fp-x": focalPointX,
-                                "fp-y": focalPointY
+                                "fp-y": focalPointY,
+                                "fm": "webp"
                             }}
                             htmlAttributes={{ media: mediaQuery, type: 'image/webp' }}
                             disableLibraryParam={true}
