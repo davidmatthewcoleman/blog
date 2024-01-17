@@ -8,7 +8,7 @@ export default async (req: any, res: any) => {
     // Check if the `slug` parameter is provided
     if (slug) {
       // Decode the slug to remove forward slashes
-      const sanitizedSlug = decodeURIComponent(slug).replace(/\//g, '');
+      const sanitizedSlug = decodeURIComponent(slug).replace(/\//g, '').replace('%2F', '').replace('%2f', '');
       // Construct the admin bar URL with the sanitized slug
       var adminBarUrl = `https://secure.davidmc.io/${sanitizedSlug}/?adminbar=show`;
     } else {
