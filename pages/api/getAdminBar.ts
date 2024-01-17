@@ -18,18 +18,14 @@ export default async (req: any, res: any) => {
 
     const response = await fetch(adminBarUrl);
 
-    if (response.ok) {
-      const html = await response.text();
-      const $ = cheerio.load(html);
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
-      // Check if the #wpadminbar element exists
-      if ($('#wpadminbar').length > 0) {
-        res.status(200).send(html);
-      } else {
-        res.status(404).end('Admin bar not found for this slug');
-      }
+    // Check if the #wpadminbar element exists
+    if ($('#wpadminbar').length > 0) {
+      res.status(200).send(html);
     } else {
-      res.status(response.status).end();
+      res.status(404).end('Admin bar not found for this slug');
     }
   } catch (error) {
     // res.status(500).end();
