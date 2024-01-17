@@ -32,6 +32,7 @@ export default async (req: any, res: any) => {
       res.status(response.status).end();
     }
   } catch (error) {
-    res.status(500).end();
+    // res.status(500).end();
+    console.log(error);
   }
 };
