@@ -53,7 +53,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
             className={`relative post flex flex-col bg-amber-50 z-10`}
         >
             <header
-                className={`relative text-white bar-left before:w-[48px] xl:before:w-[64px] cover-gradient`}
+                className={`relative text-white bar-left before:w-[48px] xl:before:w-[64px] max-h-[50vh] cover-gradient`}
                 style={{ backgroundColor }}
             >
                 {hasFeaturedMedia && single && (
