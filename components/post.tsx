@@ -53,7 +53,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
             className={`relative post flex flex-col bg-amber-50 z-10`}
         >
             <header
-                className={`relative text-white bar-left before:w-[48px] xl:before:w-[64px] max-h-[50vh] cover-gradient`}
+                className={`relative text-white bar-left before:w-[48px] xl:before:w-[64px] cover-gradient`}
                 style={{ backgroundColor }}
             >
                 {hasFeaturedMedia && single && (
@@ -61,7 +61,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                         <WpImage
                             alt={``}
                             url={data.featured_media.src}
-                            className={`absolute inset-0 w-full h-full max-h-[50vh] object-cover`}
+                            className={`absolute inset-0 w-full h-full object-cover`}
                             focalPoint={[data.featured_media.fp.x,data.featured_media.fp.y]}
                             src={{
                                 '(max-width: 500px)': [
