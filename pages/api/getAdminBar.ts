@@ -41,7 +41,7 @@ export default async (req: any, res: any) => {
     // Send the admin bar HTML or a not found message
     if (wpAdminBarElement.length > 0) {
       const adminBarHtml = wpAdminBarElement.html();
-      res.status(200).send(adminBarHtml);
+      res.status(200).send(html);
     } else {
       res.status(404).send('Admin bar not found for this slug');
     }
