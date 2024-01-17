@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
+import https from 'https';
 import cheerio from 'cheerio';
 
 export default async (req: any, res: any) => {
@@ -19,15 +20,24 @@ export default async (req: any, res: any) => {
     // Get the incoming request headers
     const requestHeaders = req.headers;
 
-    const response = await fetch(adminBarUrl, {
+    // Create an Axios instance with SSL validation bypass
+    const axiosInstance = axios.create({
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false, // Bypass SSL certificate validation
+      }),
+    });
+
+    const response = await axiosInstance.get(adminBarUrl, {
       headers: requestHeaders, // Pass the request headers, including cookies
     });
 
-    const html = await response.text();
+    const html = response.data;
     const $ = cheerio.load(html);
 
-    // Check if the #wpadminbar element exists
-    if (document.getElementById('wpadminbar')) {
+    // Check if the #wpadminbar element exists using vanilla JavaScript
+    const wpAdminBarElement = document.getElementById('wpadminbar');
+
+    if (wpAdminBarElement) {
       res.status(200).send(html);
     } else {
       res.status(404).end('Admin bar not found for this slug');
