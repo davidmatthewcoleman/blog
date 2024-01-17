@@ -43,9 +43,9 @@ export default async (req: any, res: any) => {
         headers: requestHeaders, // Pass the request headers, including cookies
       });
 
-      console.log('Response Status Code:', adminBarResponse.status);
-      console.log('Response Headers:', adminBarResponse.headers);
-      console.log('Response Data:', adminBarResponse.data);
+      // console.log('Response Status Code:', adminBarResponse.status);
+      // console.log('Response Headers:', adminBarResponse.headers);
+      // console.log('Response Data:', adminBarResponse.data);
 
       const html = adminBarResponse.data;
       const $ = cheerio.load(html);
