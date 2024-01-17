@@ -20,29 +20,26 @@ export default async (req: any, res: any) => {
     // Get the incoming request headers
     const requestHeaders = req.headers;
 
-    // Continue with your code to fetch the admin bar content
     const axiosInstance = axios.create({
       httpsAgent: new https.Agent({
-        rejectUnauthorized: true, // Bypass SSL certificate validation
+        rejectUnauthorized: false, // Bypass SSL certificate validation
       }),
-      headers: requestHeaders, // Pass the request headers, including cookies
-      withCredentials: true, // Include credentials (cookies) in the request
     });
 
-    const adminBarResponse = await axiosInstance.get(adminBarUrl);
-
-    // console.log('Response Status Code:', adminBarResponse.status);
-    // console.log('Response Headers:', adminBarResponse.headers);
-    // console.log('Response Data:', adminBarResponse.data);
+    const adminBarResponse = await axiosInstance.get(adminBarUrl, {
+      headers: requestHeaders, // Pass the request headers, including cookies
+    });
 
     const html = adminBarResponse.data;
     const $ = cheerio.load(html);
 
-    // Check if the #wpadminbar element exists using vanilla JavaScript
-    // Note: This check is based on server-side rendering, so document.getElementById won't work
-    // You might need to use a different approach if you want to check this on the client side
-    if (document.getElementById('wpadminbar')) {
-      res.status(200).send(html);
+    // Find the #wpadminbar element using cheerio
+    const wpAdminBarElement = $('#wpadminbar');
+
+    if (wpAdminBarElement.length > 0) {
+      // If the element exists, you can access its attributes or content
+      const adminBarHtml = wpAdminBarElement.html();
+      res.status(200).send(adminBarHtml);
     } else {
       res.status(404).end('Admin bar not found for this slug');
     }
