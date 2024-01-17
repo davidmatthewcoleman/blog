@@ -88,7 +88,7 @@ const WPAdminBar = () => {
     }, [adminBarSlug]);
 
     return (
-        <div id={`wpadminbar_wrapper`} className={`fixed inset-0 w-screen h-screen z-50`} dangerouslySetInnerHTML={{ __html: adminBarHtml }}></div>
+        <div id={`wpadminbar_wrapper`} className={`fixed inset-0 w-screen h-screen pointer-events-none z-50`} dangerouslySetInnerHTML={{ __html: adminBarHtml }}></div>
     );
 };
 
