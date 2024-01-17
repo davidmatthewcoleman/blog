@@ -8,11 +8,13 @@ export default async (req: any, res: any) => {
 
     // Construct the admin bar URL based on whether a slug is provided
     const adminBarUrl = slug
-        ? `${process.env.WORDPRESS_HOST}/${encodeURIComponent(slug)}/?adminbar=show`
+        ? `${process.env.WORDPRESS_HOST}${slug}?adminbar=show`
         : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
     // Extract JWT token from request headers or cookies
     const jwtToken = req.cookies.jwt_token || req.headers.authorization;
+
+    console.log('Token: ' + jwtToken);
 
     // Return unauthorized status if no token is present
     if (!jwtToken) {
