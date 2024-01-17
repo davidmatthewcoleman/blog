@@ -18,7 +18,7 @@ export default async (req: any, res: any) => {
 
     // Create an axios instance
     const axiosInstance = axios.create({
-      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+      httpsAgent: new https.Agent({ rejectUnauthorized: true }),
       headers: {
         Cookie: cookies, // Forward the cookies from the incoming request
       }
@@ -33,12 +33,8 @@ export default async (req: any, res: any) => {
     const wpAdminBarElement = $('#wpadminbar');
 
     // Send the admin bar HTML or a not found message
-    if (wpAdminBarElement.length > 0) {
-      const adminBarHtml = wpAdminBarElement.html();
-      res.status(200).send(adminBarHtml);
-    } else {
-      res.status(404).send('Admin bar not found for this slug');
-    }
+    const adminBarHtml = wpAdminBarElement.html();
+    res.status(200).send(adminBarHtml);
   } catch (error) {
     // console.error('Error:', error);
     res.status(500).send('Internal Server Error');
