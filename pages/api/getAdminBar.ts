@@ -16,7 +16,12 @@ export default async (req: any, res: any) => {
       var adminBarUrl = `https://secure.davidmc.io/?adminbar=show`;
     }
 
-    const response = await fetch(adminBarUrl);
+    // Get the incoming request headers
+    const requestHeaders = req.headers;
+
+    const response = await fetch(adminBarUrl, {
+      headers: requestHeaders, // Pass the request headers, including cookies
+    });
 
     const html = await response.text();
     const $ = cheerio.load(html);
@@ -28,7 +33,7 @@ export default async (req: any, res: any) => {
       res.status(404).end('Admin bar not found for this slug');
     }
   } catch (error) {
-    // res.status(500).end();
     console.log(error);
+    res.status(500).end(); // You can optionally return a 500 status code here
   }
 };
