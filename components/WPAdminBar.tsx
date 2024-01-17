@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+function trimSlashes(str: any){
+    str= str.startsWith('/') ? str.substr(1) : str;
+    str= str.endsWith('/') ? str.substr(0,str.length - 1) : str;
+    return str;
+}
 const WPAdminBar = () => {
     const router = useRouter();
     const [adminBarHtml, setAdminBarHtml] = useState('');
@@ -11,7 +16,7 @@ const WPAdminBar = () => {
         const fetchAdminBar = async () => {
             try {
                 let response;
-                if ( router.asPath === '/' || router.asPath.indexOf('/') !== -1 ) {
+                if ( router.asPath === '/' || trimSlashes(router.asPath).indexOf('/') !== -1 ) {
                     response = await fetch(`/api/getAdminBar`);
                 } else {
                     response = await fetch(`/api/getAdminBar?slug=${router.asPath}`);
