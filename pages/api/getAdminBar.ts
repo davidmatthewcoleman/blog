@@ -2,7 +2,7 @@ import axios from 'axios';
 import https from 'https';
 import cheerio from 'cheerio';
 
-export default async (req, res) => {
+export default async (req: any, res: any) => {
   try {
     const { slug } = req.query;
 
@@ -24,7 +24,7 @@ export default async (req, res) => {
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       headers: {
         'Authorization': `Bearer ${jwtToken}`,
-        'Host': new URL(process.env.WORDPRESS_HOST).hostname
+        'Host': new URL(process.env.WORDPRESS_HOST as string).hostname
       }
     });
 
