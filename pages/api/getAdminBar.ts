@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import https from 'https';
 import cheerio from 'cheerio';
 
@@ -6,7 +6,7 @@ export default async (req: any, res: any) => {
   try {
     const { slug } = req.query;
     const adminBarUrl = slug
-        ? `${process.env.WORDPRESS_HOST}/${slug}/?adminbar=show`
+        ? `${process.env.WORDPRESS_HOST}/${slug}?adminbar=show`
         : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
     // Extract the cookies from the incoming request
@@ -16,19 +16,23 @@ export default async (req: any, res: any) => {
       return res.status(401).send('Unauthorized: No cookies provided');
     }
 
-    // Create an axios instance
-    const axiosInstance = axios.create({
-      httpsAgent: new https.Agent({ rejectUnauthorized: true }),
+    // Create an HTTPS agent
+    const httpsAgent = new https.Agent({ rejectUnauthorized: true });
+
+    // Fetch the admin bar HTML using node-fetch with the HTTPS agent
+    const response = await fetch(adminBarUrl, {
+      method: 'GET',
       headers: {
-        Cookie: cookies, // Forward the cookies from the incoming request
-      }
+        'Cookie': cookies
+      },
+      agent: httpsAgent
     });
 
-    // Fetch the admin bar HTML
-    const adminBarResponse = await axiosInstance.get(adminBarUrl);
-    const html = adminBarResponse.data;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-    console.log(html);
+    const html = await response.text();
 
     // Load the HTML with cheerio and extract the admin bar
     const $ = cheerio.load(html);
@@ -42,7 +46,7 @@ export default async (req: any, res: any) => {
       res.status(404).send('Admin bar not found for this slug');
     }
   } catch (error) {
-    // console.error('Error:', error);
+    console.error('Error:', error);
     res.status(500).send('Internal Server Error');
   }
 };
