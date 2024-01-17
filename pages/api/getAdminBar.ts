@@ -5,28 +5,22 @@ import cheerio from 'cheerio';
 export default async (req: any, res: any) => {
   try {
     const { slug } = req.query;
-
-    // Construct the admin bar URL based on whether a slug is provided
     const adminBarUrl = slug
-        ? `${process.env.WORDPRESS_HOST}${slug}?adminbar=show`
+        ? `${process.env.WORDPRESS_HOST}/${slug}/?adminbar=show`
         : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
-    // Extract JWT token from request headers or cookies
-    const jwtToken = req.cookies.jwt_token || req.headers.authorization;
+    // Extract the cookies from the incoming request
+    const cookies = req.headers.cookie;
 
-    console.log('Token: ' + jwtToken);
-
-    // Return unauthorized status if no token is present
-    if (!jwtToken) {
-      return res.status(401).send('Unauthorized: No token provided');
+    if (!cookies) {
+      return res.status(401).send('Unauthorized: No cookies provided');
     }
 
-    // Create an axios instance with appropriate headers and SSL settings
+    // Create an axios instance
     const axiosInstance = axios.create({
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       headers: {
-        'Authorization': `Bearer ${jwtToken}`,
-        'Host': new URL(process.env.WORDPRESS_HOST as string).hostname
+        Cookie: cookies, // Forward the cookies from the incoming request
       }
     });
 
@@ -46,7 +40,7 @@ export default async (req: any, res: any) => {
       res.status(404).send('Admin bar not found for this slug');
     }
   } catch (error) {
-    console.error(error);
+    // console.error('Error:', error);
     res.status(500).send('Internal Server Error');
   }
 };
