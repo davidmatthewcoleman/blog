@@ -5,19 +5,16 @@ export default async (req: any, res: any) => {
   try {
     const { slug } = req.query;
 
-    // Handle null slug gracefully (optional)
-    if (slug === null || slug === undefined) {
-      // Handle the case where no slug is provided
-      // You can choose to respond differently based on your use case
-      // For example, you can return a message indicating that no slug is provided
-      return res.status(200).send('No slug provided');
+    // Check if the `slug` parameter is provided
+    if (slug) {
+      // Decode the slug to remove forward slashes
+      const sanitizedSlug = decodeURIComponent(slug);
+      // Construct the admin bar URL with the sanitized slug
+      var adminBarUrl = `https://secure.davidmc.io/${sanitizedSlug}/?adminbar=show`;
+    } else {
+      // If no `slug` is provided, construct the admin bar URL without the slug attribute
+      var adminBarUrl = `https://secure.davidmc.io/?adminbar=show`;
     }
-
-    // Decode the slug to remove %2F (forward slashes)
-    const decodedSlug = decodeURIComponent(slug);
-
-    // Construct the admin bar URL for the specific slug
-    const adminBarUrl = `https://secure.davidmc.io/${decodedSlug}/?adminbar=show`;
 
     const response = await fetch(adminBarUrl);
 
