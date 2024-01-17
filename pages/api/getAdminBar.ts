@@ -28,13 +28,19 @@ export default async (req: any, res: any) => {
     const adminBarResponse = await axiosInstance.get(adminBarUrl);
     const html = adminBarResponse.data;
 
+    console.log(html);
+
     // Load the HTML with cheerio and extract the admin bar
     const $ = cheerio.load(html);
     const wpAdminBarElement = $('#wpadminbar');
 
     // Send the admin bar HTML or a not found message
-    const adminBarHtml = wpAdminBarElement.html();
-    res.status(200).send(adminBarHtml);
+    if (wpAdminBarElement.length > 0) {
+      const adminBarHtml = wpAdminBarElement.html();
+      res.status(200).send(adminBarHtml);
+    } else {
+      res.status(404).send('Admin bar not found for this slug');
+    }
   } catch (error) {
     // console.error('Error:', error);
     res.status(500).send('Internal Server Error');
