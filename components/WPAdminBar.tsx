@@ -10,7 +10,12 @@ const WPAdminBar = () => {
 
         const fetchAdminBar = async () => {
             try {
-                const response = await fetch(`/api/getAdminBar?slug=${router.asPath}`);
+                let response;
+                if ( router.asPath === '/' ) {
+                    response = await fetch(`/api/getAdminBar`);
+                } else {
+                    response = await fetch(`/api/getAdminBar?slug=${router.asPath}`);
+                }
                 if (!response.ok) {
                     console.error('Failed to fetch admin bar:', response.status);
                     return;
