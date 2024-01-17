@@ -33,7 +33,6 @@ const WPAdminBar = () => {
 
                 if (response.ok) {
                     const html = await response.text();
-                    setAdminBarHtml(html);
 
                     // Now, fetch the CSS and JS for the #wpadminbar
                     const adminBar = document.createElement('div');
@@ -43,8 +42,8 @@ const WPAdminBar = () => {
                     const jsScript = adminBar.querySelector('script#admin-bar-js');
 
                     if (cssLink && jsScript) {
-                        const cssUrl = cssLink.getAttribute('href') as any;
-                        const jsUrl = jsScript.getAttribute('src') as any;
+                        const cssUrl = cssLink.getAttribute('href') as string;
+                        const jsUrl = jsScript.getAttribute('src') as string;
 
                         // Fetch the CSS and JS files
                         const [cssResponse, jsResponse] = await Promise.all([
@@ -54,13 +53,26 @@ const WPAdminBar = () => {
 
                         if (cssResponse.ok) {
                             const cssText = await cssResponse.text();
-                            // Handle the CSS text as needed (e.g., apply it to the page)
+                            // Create a style element and set its content to the CSS text
+                            const styleElement = document.createElement('style');
+                            styleElement.textContent = cssText;
+
+                            // Append the style element to the adminBar
+                            adminBar.appendChild(styleElement);
                         }
 
                         if (jsResponse.ok) {
                             const jsText = await jsResponse.text();
-                            // Handle the JS text as needed (e.g., execute it)
+                            // Create a script element and set its content to the JS text
+                            const scriptElement = document.createElement('script');
+                            scriptElement.textContent = jsText;
+
+                            // Append the script element to the adminBar
+                            adminBar.appendChild(scriptElement);
                         }
+
+                        // Now, adminBar contains the HTML, CSS, and JS
+                        setAdminBarHtml(adminBar.innerHTML);
                     }
                 } else {
                     console.error('Failed to fetch admin bar:', response.status);
@@ -74,8 +86,6 @@ const WPAdminBar = () => {
 
         fetchAdminBar();
     }, [adminBarSlug]);
-
-
 
     return (
         <div id={`wpadminbar_wrapper`} className={`fixed inset-0 w-screen h-screen z-50`} dangerouslySetInnerHTML={{ __html: adminBarHtml }}></div>
