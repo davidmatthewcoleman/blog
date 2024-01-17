@@ -29,13 +29,15 @@ export default async (req: any, res: any) => {
     // Check if the cookies are available in the response
     const authCookies = response.data;
 
+    console.log(authCookies);
+
     if (authCookies) {
       // You can use the retrieved cookies for authentication or other purposes
 
       // Continue with your code to fetch the admin bar content
       const axiosInstance = axios.create({
         httpsAgent: new https.Agent({
-          rejectUnauthorized: false, // Bypass SSL certificate validation
+          rejectUnauthorized: true, // Bypass SSL certificate validation
         }),
       });
 
@@ -62,7 +64,7 @@ export default async (req: any, res: any) => {
       res.status(401).end('Authentication cookies not available'); // Handle unauthorized access
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     res.status(500).end(); // You can optionally return a 500 status code here
   }
 };
