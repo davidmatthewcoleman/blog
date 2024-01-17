@@ -11,7 +11,7 @@ const WPAdminBar = () => {
         const fetchAdminBar = async () => {
             try {
                 let response;
-                if ( router.asPath === '/' ) {
+                if ( router.asPath === '/' || router.asPath.indexOf('/') !== -1 ) {
                     response = await fetch(`/api/getAdminBar`);
                 } else {
                     response = await fetch(`/api/getAdminBar?slug=${router.asPath}`);
