@@ -41,7 +41,7 @@ export default async (req: any, res: any) => {
     // Check if the #wpadminbar element exists using vanilla JavaScript
     // Note: This check is based on server-side rendering, so document.getElementById won't work
     // You might need to use a different approach if you want to check this on the client side
-    if ($('#wpadminbar').length > 0) {
+    if (document.getElementById('wpadminbar')) {
       res.status(200).send(html);
     } else {
       res.status(404).end('Admin bar not found for this slug');
