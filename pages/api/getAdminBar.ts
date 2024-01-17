@@ -24,6 +24,11 @@ export default async (req: any, res: any) => {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false, // Bypass SSL certificate validation
       }),
+      headers: {
+        // @ts-ignore
+        'Host': process.env.WORDPRESS_HOST.replace('https://', ''), // Replace with the correct host
+        ...requestHeaders, // Pass the rest of the request headers, including cookies
+      }
     });
 
     const adminBarResponse = await axiosInstance.get(adminBarUrl, {
@@ -32,6 +37,8 @@ export default async (req: any, res: any) => {
 
     const html = adminBarResponse.data;
     const $ = cheerio.load(html);
+
+    console.log(html);
 
     // Find the #wpadminbar element using cheerio
     const wpAdminBarElement = $('#wpadminbar');
