@@ -9,6 +9,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import WpImage from "@/components/wpImage";
 import React from "react";
+import WPAdminBar from "@/components/WPAdminBar";
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
     return (
@@ -26,6 +27,7 @@ export default function PostPage({menu, options, latestPosts, currentPost, lates
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
+            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}

@@ -6,6 +6,7 @@ import {any} from "prop-types";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
+import WPAdminBar from "@/components/WPAdminBar";
 
 function Search({ menu, options, latestPosts, allPosts, query }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string }) {
     let transformedData: any = [];
@@ -42,6 +43,7 @@ function Search({ menu, options, latestPosts, allPosts, query }: { menu: any, op
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
+            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}

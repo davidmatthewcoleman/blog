@@ -5,6 +5,7 @@ import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
+import WPAdminBar from "@/components/WPAdminBar";
 
 function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any}) {
     return (
@@ -22,6 +23,7 @@ function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: a
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
+            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}
