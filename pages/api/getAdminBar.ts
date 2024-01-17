@@ -14,7 +14,7 @@ export default async (req: any, res: any) => {
       var adminBarUrl = `${process.env.WORDPRESS_HOST}/${sanitizedSlug}/?adminbar=show`;
     } else {
       // If no `slug` is provided, construct the admin bar URL without the slug attribute
-      var adminBarUrl = `https://secure.davidmc.io/?adminbar=show`;
+      var adminBarUrl = `${process.env.WORDPRESS_HOST}/?adminbar=show`;
     }
 
     // Get the incoming request headers
