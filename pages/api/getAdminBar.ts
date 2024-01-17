@@ -27,7 +27,7 @@ export default async (req: any, res: any) => {
     const $ = cheerio.load(html);
 
     // Check if the #wpadminbar element exists
-    if ($('#wpadminbar').length > 0) {
+    if (document.getElementById('wpadminbar')) {
       res.status(200).send(html);
     } else {
       res.status(404).end('Admin bar not found for this slug');
