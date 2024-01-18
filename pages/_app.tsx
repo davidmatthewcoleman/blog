@@ -1,54 +1,37 @@
 import '@/styles/globals.css'
 import React from "react";
-import type { AppProps } from 'next/app'
+import App from 'next/app'
 import { useRouter } from 'next/router'
 import {GetServerSideProps} from "next";
 
-const AdminBarContext = React.createContext({ adminBarHtml: '' });
+class WebApp extends App {
+   static async getInitialProps(appContext: any) {
+      const { ctx } = appContext;
+      const { asPath } = ctx; // This gives you the current path
 
-export default function App({ Component, pageProps }: AppProps) {
-   const router = useRouter();
+      // Extract slug from the path
+      const slug = asPath.split('/').filter((part: string) => part.length > 0).join('/');
 
-   return (
-       <AdminBarContext.Provider value={{ adminBarHtml: pageProps.adminBarHtml }}>
-          <Component {...pageProps} key={router.asPath} />
-       </AdminBarContext.Provider>
-   );
-}
 
-function trimSlashes(str: string | undefined) {
-   if (!str) return '';
-   return str.replace(/^\/|\/$/g, '');
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-   // Check if the user is logged in to WordPress
-   const cookies = context.req.headers.cookie as string;
-   const isLoggedIn = cookies && cookies.split(';').some(cookie => cookie.trim().startsWith('wordpress_logged_in_'));
-
-   if (!isLoggedIn) {
-       return { props: { adminBarHtml: null } };
-   }
-
-   try {
-      const rawSlug = context.params?.slug as string | undefined;
-      const slug = trimSlashes(rawSlug);  // Trim slashes from the slug
+      // Construct the admin bar URL
       const adminBarUrl = slug
           ? `${process.env.WORDPRESS_HOST}/${slug}/?adminbar=show`
           : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
-      const response = await fetch(adminBarUrl, {
-         headers: { Cookie: cookies },
-      });
+      // Fetch the admin bar HTML
+      const res = await fetch(adminBarUrl);
+      const adminBarHtml = await res.text(); // Assuming the response is directly the HTML
 
-      if (!response.ok) {
-         throw new Error(`Failed to fetch admin bar: ${response.status}`);
-      }
+      // Call the original getInitialProps method
+      const appProps = await App.getInitialProps(appContext);
 
-      const adminBarHtml = await response.text();
-      return { props: { adminBarHtml } };
-   } catch (error) {
-      console.error('Error fetching admin bar:', error);
-      return { props: { adminBarHtml: null } };
+      return { ...appProps, pageProps: { ...appProps.pageProps, adminBarHtml } };
    }
-};
+
+   render() {
+      const { Component, pageProps } = this.props;
+      return <Component {...pageProps} />;
+   }
+}
+
+export default WebApp;

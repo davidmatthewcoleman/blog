@@ -2,10 +2,10 @@ import WpImage from "@/components/wpImage";
 import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
+import Layout from "@/components/layout";
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
 
-function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
+function Home({adminBarHtml, menu, options, latestPosts, allPosts}: {adminBarHtml: any, menu: any, options: any, latestPosts: any, allPosts: any}) {
   return (
       <>
           <Head>
@@ -21,31 +21,33 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
               <meta name="msapplication-config" content="/icons/browserconfig.xml" />
               <meta name="theme-color" content="#000000" />
           </Head>
-          <WpImage
-              alt={options.name}
-              url={options.site_background_url}
-              src={{
-                  '(max-width: 960px)': [
-                      {
-                          width: 1080,
-                          height: 1920
-                      }
-                  ],
-                  '(min-width: 961px)': [
-                      {
-                          width: 1920,
-                          height: 1080
-                      }
-                  ]
-              }}
-              focalPoint={[50,50]}
-              className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-              props={``}
-          />
-          <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-              <Header menu={menu} options={options} latestPosts={latestPosts} />
-              <PostList allPosts={allPosts} header={false} options={options} pageNumber={1} />
-          </main>
+          <Layout adminBarHtml={adminBarHtml}>
+              <WpImage
+                  alt={options.name}
+                  url={options.site_background_url}
+                  src={{
+                      '(max-width: 960px)': [
+                          {
+                              width: 1080,
+                              height: 1920
+                          }
+                      ],
+                      '(min-width: 961px)': [
+                          {
+                              width: 1920,
+                              height: 1080
+                          }
+                      ]
+                  }}
+                  focalPoint={[50,50]}
+                  className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                  props={``}
+              />
+              <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                  <Header menu={menu} options={options} latestPosts={latestPosts} />
+                  <PostList allPosts={allPosts} header={false} options={options} pageNumber={1} />
+              </main>
+          </Layout>
       </>
   )
 }

@@ -5,9 +5,9 @@ import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
+import Layout from "@/components/layout";
 
-function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any}) {
+function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag}: {adminBarHtml: any, menu: any, options: any, latestPosts: any, allPosts: any, tag: any}) {
     return (
         <>
             <Head>
@@ -23,38 +23,40 @@ function Tag({menu, options, latestPosts, allPosts, tag}: {menu: any, options: a
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <WpImage
-                alt={options.name}
-                url={options.site_background_url}
-                src={{
-                    '(max-width: 960px)': [
-                        {
-                            width: 1080,
-                            height: 1920
-                        }
-                    ],
-                    '(min-width: 961px)': [
-                        {
-                            width: 1920,
-                            height: 1080
-                        }
-                    ]
-                }}
-                focalPoint={[50,50]}
-                className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-                props={``}
-            />
-            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                <Header menu={menu} options={options} latestPosts={latestPosts} />
-                <PostList allPosts={allPosts} header={(
-                    <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
-                        <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
-                    </div>
-                )}
-                pageNumber={1}
-                options={options}
+            <Layout adminBarHtml={adminBarHtml}>
+                <WpImage
+                    alt={options.name}
+                    url={options.site_background_url}
+                    src={{
+                        '(max-width: 960px)': [
+                            {
+                                width: 1080,
+                                height: 1920
+                            }
+                        ],
+                        '(min-width: 961px)': [
+                            {
+                                width: 1920,
+                                height: 1080
+                            }
+                        ]
+                    }}
+                    focalPoint={[50,50]}
+                    className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                    props={``}
                 />
-            </main>
+                <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                    <Header menu={menu} options={options} latestPosts={latestPosts} />
+                    <PostList allPosts={allPosts} header={(
+                        <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
+                            <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
+                        </div>
+                    )}
+                    pageNumber={1}
+                    options={options}
+                    />
+                </main>
+            </Layout>
         </>
     )
 }

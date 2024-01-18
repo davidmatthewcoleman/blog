@@ -8,10 +8,10 @@ import Head from "next/head";
 import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import WpImage from "@/components/wpImage";
+import Layout from "@/components/layout";
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
 
-export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
+export default function PostPage({adminBarHtml, menu, options, latestPosts, currentPost, latestPostsAside}: {adminBarHtml: any, menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
     return (
         <>
             <Head>
@@ -27,35 +27,37 @@ export default function PostPage({menu, options, latestPosts, currentPost, lates
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <WpImage
-                alt={options.name}
-                url={options.site_background_url}
-                src={{
-                    '(max-width: 960px)': [
-                        {
-                            width: 1080,
-                            height: 1920
-                        }
-                    ],
-                    '(min-width: 961px)': [
-                        {
-                            width: 1920,
-                            height: 1080
-                        }
-                    ]
-                }}
-                focalPoint={[50,50]}
-                className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-                props={``}
-            />
-            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                <Header menu={menu} options={options} latestPosts={latestPosts} />
-                {currentPost[0].type === 'post' ? (
-                    <SinglePost post={currentPost} latestPosts={latestPostsAside} options={options} />
-                ) : (
-                    <SinglePage post={currentPost} latestPosts={latestPostsAside} options={options} />
-                )}
-            </main>
+            <Layout adminBarHtml={adminBarHtml}>
+                <WpImage
+                    alt={options.name}
+                    url={options.site_background_url}
+                    src={{
+                        '(max-width: 960px)': [
+                            {
+                                width: 1080,
+                                height: 1920
+                            }
+                        ],
+                        '(min-width: 961px)': [
+                            {
+                                width: 1920,
+                                height: 1080
+                            }
+                        ]
+                    }}
+                    focalPoint={[50,50]}
+                    className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                    props={``}
+                />
+                <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                    <Header menu={menu} options={options} latestPosts={latestPosts} />
+                    {currentPost[0].type === 'post' ? (
+                        <SinglePost post={currentPost} latestPosts={latestPostsAside} options={options} />
+                    ) : (
+                        <SinglePage post={currentPost} latestPosts={latestPostsAside} options={options} />
+                    )}
+                </main>
+            </Layout>
         </>
     )
 }
