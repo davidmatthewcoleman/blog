@@ -75,7 +75,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                 className={`post-content relative w-full flex flex-col xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
                             >
                                 <div
-                                    className={`prose prose-lg prose-dropcap xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
+                                    className={`prose prose-lg prose-dropcap prose-strong:font-sans xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
                                 >
                                     <Blocks data={post.blocks}/>
                                 </div>
@@ -237,7 +237,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                 className={`post-content relative w-full flex flex-col xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
                             >
                                 <div
-                                    className={`prose prose-lg prose-dropcap xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
+                                    className={`prose prose-lg prose-dropcap prose-strong:font-sans xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
                                 >
                                     <Blocks data={post.blocks}/>
                                 </div>
