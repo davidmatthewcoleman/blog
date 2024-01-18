@@ -3,12 +3,13 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 
 const WPAdminBar = (adminBarHtml: any) => {
-    if (!adminBarHtml) return null;
+    if (!adminBarHtml || adminBarHtml.trim() === '') return null;
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
+
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if this page is accessed directly
