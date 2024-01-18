@@ -2,11 +2,7 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 
-interface WPAdminBarProps {
-    adminBarHtml: string;
-}
-
-const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml }) => {
+const WPAdminBar = ({ adminBarHtml }: { adminBarHtml: any }) => {
     // Render only if adminBarHtml is provided
     if (!adminBarHtml || adminBarHtml.trim() === '') return null;
 
