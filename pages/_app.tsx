@@ -51,8 +51,6 @@ class WebApp extends App {
       // Call the original getInitialProps method
       const appProps = await App.getInitialProps(appContext);
 
-      console.log('Slug:', slug);
-
       // Pass the admin bar HTML only if the admin bar is present
       return {
          ...appProps,
