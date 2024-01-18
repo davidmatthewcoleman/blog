@@ -6,12 +6,12 @@ interface WPAdminBarProps {
     adminBarHtml: string;
 }
 
-const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml }) => {
+const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml= '' }) => {
     // Render only if adminBarHtml is provided
     if (!adminBarHtml) return null;
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
 
