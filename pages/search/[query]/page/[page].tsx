@@ -6,9 +6,8 @@ import {any} from "prop-types";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
-import Layout from "@/components/layout";
 
-function Search({ adminBarHtml, menu, options, latestPosts, allPosts, query, pageNumber }: { adminBarHtml: any, menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number }) {
+function Search({ menu, options, latestPosts, allPosts, query, pageNumber }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number }) {
     let transformedData: any = [];
 
     allPosts.map((post: any) => {
@@ -43,40 +42,38 @@ function Search({ adminBarHtml, menu, options, latestPosts, allPosts, query, pag
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <Layout adminBarHtml={adminBarHtml}>
-                <WpImage
-                    alt={options.name}
-                    url={options.site_background_url}
-                    src={{
-                        '(max-width: 960px)': [
-                            {
-                                width: 1080,
-                                height: 1920
-                            }
-                        ],
-                        '(min-width: 961px)': [
-                            {
-                                width: 1920,
-                                height: 1080
-                            }
-                        ]
-                    }}
-                    focalPoint={[50,50]}
-                    className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-                    props={``}
+            <WpImage
+                alt={options.name}
+                url={options.site_background_url}
+                src={{
+                    '(max-width: 960px)': [
+                        {
+                            width: 1080,
+                            height: 1920
+                        }
+                    ],
+                    '(min-width: 961px)': [
+                        {
+                            width: 1920,
+                            height: 1080
+                        }
+                    ]
+                }}
+                focalPoint={[50,50]}
+                className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                props={``}
+            />
+            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                <Header menu={menu} options={options} latestPosts={latestPosts} />
+                <PostList allPosts={transformedData} header={(
+                    <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
+                        Your search for <strong className={`font-bold`}>{query.replace('+', ' ')}</strong> returned <strong className={`font-bold`}>{allPosts.length} {allPosts.length === 1 ? 'result' : 'results'}</strong>
+                    </div>
+                )}
+                options={options}
+                pageNumber={pageNumber}
                 />
-                <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                    <Header menu={menu} options={options} latestPosts={latestPosts} />
-                    <PostList allPosts={transformedData} header={(
-                        <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
-                            Your search for <strong className={`font-bold`}>{query.replace('+', ' ')}</strong> returned <strong className={`font-bold`}>{allPosts.length} {allPosts.length === 1 ? 'result' : 'results'}</strong>
-                        </div>
-                    )}
-                    options={options}
-                    pageNumber={pageNumber}
-                    />
-                </main>
-            </Layout>
+            </main>
         </>
     );
 }
@@ -102,13 +99,7 @@ export async function getServerSideProps(context: any) {
     const resPosts = await fetch(postsUrl);
     const allPosts = await resPosts.json();
 
-    // Authenticate the user (example)
-    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
-        headers: {
-            cookie: context.req.headers.cookie || '',
-        },
-    });
-    const auth = await resAuth.json();
+    // console.log(pageNumber);
 
     return {
         props: {
@@ -117,8 +108,7 @@ export async function getServerSideProps(context: any) {
             latestPosts,
             allPosts,
             query,
-            pageNumber,
-            isAuthenticated: auth.isAuthenticated
+            pageNumber
         },
     };
 }

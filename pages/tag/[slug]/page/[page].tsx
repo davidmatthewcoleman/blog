@@ -1,15 +1,13 @@
 import Image from 'next/image'
-import dynamic from 'next/dynamic';
 
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
-import Layout from "@/components/layout";
 import React from "react";
+import AdminBar from "@/components/adminBar";
 
-
-function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag, pageNumber}: {adminBarHtml: any, menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any}) {
+function Tag({menu, options, latestPosts, allPosts, tag, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any}) {
     return (
         <>
             <Head>
@@ -25,45 +23,76 @@ function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag, pageNumbe
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <Layout adminBarHtml={adminBarHtml}>
-                <WpImage
-                    alt={options.name}
-                    url={options.site_background_url}
-                    src={{
-                        '(max-width: 960px)': [
-                            {
-                                width: 1080,
-                                height: 1920
-                            }
-                        ],
-                        '(min-width: 961px)': [
-                            {
-                                width: 1920,
-                                height: 1080
-                            }
-                        ]
-                    }}
-                    focalPoint={[50,50]}
-                    className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-                    props={``}
+            <AdminBar/>
+            <WpImage
+                alt={options.name}
+                url={options.site_background_url}
+                src={{
+                    '(max-width: 960px)': [
+                        {
+                            width: 1080,
+                            height: 1920
+                        }
+                    ],
+                    '(min-width: 961px)': [
+                        {
+                            width: 1920,
+                            height: 1080
+                        }
+                    ]
+                }}
+                focalPoint={[50,50]}
+                className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                props={``}
+            />
+            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                <Header menu={menu} options={options} latestPosts={latestPosts} />
+                <PostList allPosts={allPosts} header={(
+                    <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
+                        <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
+                    </div>
+                )}
+                          pageNumber={pageNumber}
+                          options={options}
                 />
-                <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                    <Header menu={menu} options={options} latestPosts={latestPosts} />
-                    <PostList allPosts={allPosts} header={(
-                        <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
-                            <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
-                        </div>
-                    )}
-                              pageNumber={pageNumber}
-                              options={options}
-                    />
-                </main>
-            </Layout>
+            </main>
         </>
     )
 }
 
-export async function getServerSideProps({ context, params }: any) {
+export async function getStaticPaths() {
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999`);
+    const tags = await res.json();
+
+    const paths = [];
+
+    for (const tag of tags) {
+        if (!tag.slug) {
+            continue; // Skip if slug is undefined
+        }
+
+        // Fetch the total number of posts for the topic
+        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=post_tag&filter[term]=${tag.slug}`);
+        const posts = await resPosts.json();
+        const totalPagesPerTopic = Math.ceil(posts.length / 8);
+
+        for (let pageNumber = 1; pageNumber <= totalPagesPerTopic; pageNumber++) {
+            paths.push({
+                params: {
+                    slug: tag.slug,
+                    page: pageNumber.toString()
+                }
+            });
+        }
+    }
+
+    return {
+        paths,
+        fallback: 'blocking',
+    };
+}
+
+export async function getStaticProps({ params }: any) {
     const { slug, page } = params;
     const pageNumber = parseInt(page, 10);
 
@@ -79,14 +108,6 @@ export async function getServerSideProps({ context, params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
-    // Authenticate the user (example)
-    const resAuth = await fetch(`${process.env.FRONTEND_HOST}/api/authenticate`, {
-        headers: {
-            cookie: context.req.headers.cookie || '',
-        },
-    });
-    const auth = await resAuth.json();
-
     return {
         props: {
             menu,
@@ -94,9 +115,9 @@ export async function getServerSideProps({ context, params }: any) {
             latestPosts,
             allPosts,
             tag,
-            pageNumber,
-            isAuthenticated: auth.isAuthenticated
-        }
+            pageNumber
+        },
+        revalidate: 300,
     };
 }
 

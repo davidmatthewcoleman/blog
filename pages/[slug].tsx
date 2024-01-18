@@ -8,10 +8,10 @@ import Head from "next/head";
 import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import WpImage from "@/components/wpImage";
-import Layout from "@/components/layout";
 import React from "react";
+import AdminBar from "@/components/adminBar";
 
-export default function PostPage({adminBarHtml, menu, options, latestPosts, currentPost, latestPostsAside}: {adminBarHtml: any, menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
+export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
     return (
         <>
             <Head>
@@ -27,42 +27,59 @@ export default function PostPage({adminBarHtml, menu, options, latestPosts, curr
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <Layout adminBarHtml={adminBarHtml}>
-                <WpImage
-                    alt={options.name}
-                    url={options.site_background_url}
-                    src={{
-                        '(max-width: 960px)': [
-                            {
-                                width: 1080,
-                                height: 1920
-                            }
-                        ],
-                        '(min-width: 961px)': [
-                            {
-                                width: 1920,
-                                height: 1080
-                            }
-                        ]
-                    }}
-                    focalPoint={[50,50]}
-                    className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
-                    props={``}
-                />
-                <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                    <Header menu={menu} options={options} latestPosts={latestPosts} />
-                    {currentPost[0].type === 'post' ? (
-                        <SinglePost post={currentPost} latestPosts={latestPostsAside} options={options} />
-                    ) : (
-                        <SinglePage post={currentPost} latestPosts={latestPostsAside} options={options} />
-                    )}
-                </main>
-            </Layout>
+            <AdminBar/>
+            <WpImage
+                alt={options.name}
+                url={options.site_background_url}
+                src={{
+                    '(max-width: 960px)': [
+                        {
+                            width: 1080,
+                            height: 1920
+                        }
+                    ],
+                    '(min-width: 961px)': [
+                        {
+                            width: 1920,
+                            height: 1080
+                        }
+                    ]
+                }}
+                focalPoint={[50,50]}
+                className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
+                props={``}
+            />
+            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+                <Header menu={menu} options={options} latestPosts={latestPosts} />
+                {currentPost[0].type === 'post' ? (
+                    <SinglePost post={currentPost} latestPosts={latestPostsAside} options={options} />
+                ) : (
+                    <SinglePage post={currentPost} latestPosts={latestPostsAside} options={options} />
+                )}
+            </main>
         </>
     )
 }
 
-export async function getServerSideProps({ context, params }: any) {
+export async function getStaticPaths() {
+    const [posts, pages] = await Promise.all([
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/pages?per_page=9999`).then(res => res.json()),
+    ]);
+
+    const allPosts = [...posts, ...pages];
+
+    const paths = allPosts.map((post: any) => ({
+        params: { slug: post.slug },
+    }));
+
+    return {
+        paths,
+        fallback: 'blocking',
+    };
+}
+
+export async function getStaticProps({ params }: any) {
     try {
         const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
         const menus = await resMenuIDs.json();
@@ -79,23 +96,15 @@ export async function getServerSideProps({ context, params }: any) {
         const currentPost = [...currentPosts, ...currentPages];
         const latestPostsAside = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=3`).then(res => res.json());
 
-        // Authenticate the user (example)
-        const resAuth = await fetch(`${process.env.FRONTEND_HOST}/api/authenticate`, {
-            headers: {
-                cookie: context.req.headers.cookie || '',
-            },
-        });
-        const auth = await resAuth.json();
-
         return {
             props: {
                 menu,
                 options,
                 latestPosts,
                 currentPost,
-                latestPostsAside,
-                isAuthenticated: auth.isAuthenticated
-            }
+                latestPostsAside
+            },
+            revalidate: 300,
         };
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -105,7 +114,8 @@ export async function getServerSideProps({ context, params }: any) {
                 options: null,
                 latestPosts: null,
                 allPosts: null,
-            }
+            },
+            revalidate: 300,
         };
     }
 }
