@@ -65,7 +65,7 @@ export async function getServerSideProps(context: any) {
     ]);
 
     // Authenticate the user (example)
-    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+    const resAuth = await fetch(`${process.env.FRONTEND_HOST}/api/authenticate`, {
         headers: {
             cookie: context.req.headers.cookie || '',
         },
