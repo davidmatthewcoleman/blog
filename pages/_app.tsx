@@ -8,11 +8,32 @@ import {GetServerSideProps} from "next";
 class WebApp extends App {
    static async getInitialProps(appContext: any) {
       const { ctx } = appContext;
-      const { asPath } = ctx; // This gives you the current path
+      let slug = '';
 
-      // Extract slug from the path
-      const slug = asPath.split('/').filter((part: string) => part.length > 0).join('/');
+      // Function to extract slug based on route type
+      const extractSlug = (path: any) => {
+         const topicMatch = path.match(/\/topic\/([^\/?]+)/);
+         if (topicMatch) return topicMatch[1];
 
+         const tagMatch = path.match(/\/tag\/([^\/?]+)/);
+         if (tagMatch) return tagMatch[1];
+
+         const writerMatch = path.match(/\/writer\/([^\/?]+)/);
+         if (writerMatch) return writerMatch[1];
+
+         const searchMatch = path.match(/\/search\/([^\/?]+)/);
+         if (searchMatch) return searchMatch[1];
+
+         return '';
+      };
+
+      if (ctx.req) {
+         // Server-side: Extract slug from the request URL
+         slug = extractSlug(ctx.req.url);
+      } else {
+         // Client-side: Use window.location.pathname
+         slug = extractSlug(window.location.pathname);
+      }
 
       // Construct the admin bar URL
       const adminBarUrl = slug
@@ -30,12 +51,15 @@ class WebApp extends App {
       // Call the original getInitialProps method
       const appProps = await App.getInitialProps(appContext);
 
+      console.log('Slug:', slug);
+
       // Pass the admin bar HTML only if the admin bar is present
       return {
          ...appProps,
          pageProps: {
             ...appProps.pageProps,
-            adminBarHtml: isAdminBarPresent ? adminBarHtml : null
+            adminBarHtml: isAdminBarPresent ? adminBarHtml : null,
+            key: slug
          }
       };
    }
