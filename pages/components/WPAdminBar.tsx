@@ -2,11 +2,12 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 
-const WPAdminBar = (adminBarHtml: any) => {
-    if (!adminBarHtml) return null;
+const WPAdminBar = ({ adminBarHtml }: { adminBarHtml: any }) => {
+    // Assuming the HTML is in a property named 'html'
+    if (!adminBarHtml || adminBarHtml.trim() === '') return null;
 
     return (
-        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
 
@@ -49,9 +50,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             throw new Error(`Failed to fetch admin bar: ${response.status}`);
         }
 
-        const adminBarHtml = await response.text();
-        const out = JSON.stringify(adminBarHtml);
-        return { props: { out } };
+        const data = await response.json();
+        const adminBarHtml = data.adminBarHtml;
+        return { props: { adminBarHtml } };
     } catch (error) {
         console.error('Error fetching admin bar:', error);
         return { props: { adminBarHtml: null } };
