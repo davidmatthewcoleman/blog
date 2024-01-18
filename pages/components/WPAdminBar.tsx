@@ -50,8 +50,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
 
         const adminBarHtml = await response.text();
-        console.log(adminBarHtml);
-        return { props: { adminBarHtml } };
+        const out = JSON.stringify(adminBarHtml);
+        return { props: { out } };
     } catch (error) {
         console.error('Error fetching admin bar:', error);
         return { props: { adminBarHtml: null } };
