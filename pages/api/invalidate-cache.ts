@@ -1,6 +1,5 @@
-// pages/api/invalidate-cache.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
+import cache from 'memory-cache';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -9,6 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Example: Check if it's a login event
         if (req.headers['x-wordpress-event'] === 'login') {
+            cache.clear();
             // Perform cache invalidation logic for login event here
             // You can use your preferred caching mechanism or logic
             // For this example, we'll just send a response indicating success
@@ -17,6 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Example: Check if it's a logout event
         if (req.headers['x-wordpress-event'] === 'logout') {
+            cache.clear();
             // Perform cache invalidation logic for logout event here
             // You can use your preferred caching mechanism or logic
             // For this example, we'll just send a response indicating success
