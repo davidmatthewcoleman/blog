@@ -3,7 +3,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 
 const WPAdminBar = (adminBarHtml: any) => {
-    if (!adminBarHtml || adminBarHtml.trim() === '') return null;
+    if (!adminBarHtml) return null;
 
     return (
         <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
