@@ -1,9 +1,10 @@
 import React from 'react';
+import AdminBar from "@/components/adminBar";
 
-const Layout = ({ children, adminBarHtml }: { children: any, adminBarHtml: any }) => {
+const Layout = ({ children }: { children: any }) => {
     return (
         <>
-            <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+            <AdminBar/>
             {children}
         </>
     );
