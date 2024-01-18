@@ -2,12 +2,15 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 
-const WPAdminBar = ({ adminBarHtml }: { adminBarHtml: any }) => {
-    // Assuming the HTML is in a property named 'html'
-    if (!adminBarHtml || adminBarHtml.trim() === '') return null;
+interface WPAdminBarProps {
+    adminBarHtml?: string; // Make it optional
+}
+
+const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml = '' }) => {
+    if (!adminBarHtml.trim()) return null;
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
 
