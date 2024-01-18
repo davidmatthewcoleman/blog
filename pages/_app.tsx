@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import React from "react";
 import App from 'next/app'
+import cheerio from 'cheerio';
 import { useRouter } from 'next/router'
 import {GetServerSideProps} from "next";
 
@@ -20,12 +21,23 @@ class WebApp extends App {
 
       // Fetch the admin bar HTML
       const res = await fetch(adminBarUrl);
-      const adminBarHtml = await res.text(); // Assuming the response is directly the HTML
+      const adminBarHtml = await res.text();
+
+      // Use Cheerio to parse the HTML
+      const $ = cheerio.load(adminBarHtml);
+      const isAdminBarPresent = $('#wpadminbar').length > 0;
 
       // Call the original getInitialProps method
       const appProps = await App.getInitialProps(appContext);
 
-      return { ...appProps, pageProps: { ...appProps.pageProps, adminBarHtml } };
+      // Pass the admin bar HTML only if the admin bar is present
+      return {
+         ...appProps,
+         pageProps: {
+            ...appProps.pageProps,
+            adminBarHtml: isAdminBarPresent ? adminBarHtml : null
+         }
+      };
    }
 
    render() {
