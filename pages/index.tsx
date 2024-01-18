@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import React from "react";
-import AdminBar from "@/components/adminBar";
+import WPAdminBar from "@/components/WPAdminBar";
 
 function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
   return (
@@ -21,7 +21,7 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
               <meta name="msapplication-config" content="/icons/browserconfig.xml" />
               <meta name="theme-color" content="#000000" />
           </Head>
-          <AdminBar/>
+          <WPAdminBar/>
           <WpImage
               alt={options.name}
               url={options.site_background_url}

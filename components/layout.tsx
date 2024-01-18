@@ -1,10 +1,10 @@
 import React from 'react';
-import AdminBar from "@/components/adminBar";
+import WPAdminBar from "@/components/WPAdminBar";
 
 const Layout = ({ children, adminBarHtml = '' }: { children: any, adminBarHtml: any }) => {
     return (
         <>
-            <AdminBar/>
+            <WPAdminBar/>
             {children}
         </>
     );

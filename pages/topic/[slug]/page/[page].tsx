@@ -6,7 +6,7 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
-import AdminBar from "@/components/adminBar";
+import WPAdminBar from "@/components/WPAdminBar";
 
 function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, pageNumber: number}) {
     return (
@@ -24,7 +24,7 @@ function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNum
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <AdminBar/>
+            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}
