@@ -52,7 +52,7 @@ function Home({adminBarHtml, menu, options, latestPosts, allPosts}: {adminBarHtm
   )
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(context: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -64,6 +64,21 @@ export async function getStaticProps() {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json())
     ]);
 
+    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        headers: {
+            cookie: context.req.headers.cookie || '',
+        },
+    });
+
+    const auth = await resAuth.json();
+    let revalidate;
+
+    if ( auth ) {
+        revalidate = 1;
+    } else {
+        revalidate = 300;
+    }
+
     return {
         props: {
             menu,
@@ -71,7 +86,7 @@ export async function getStaticProps() {
             latestPosts,
             allPosts
         },
-        revalidate: 300,
+        revalidate: revalidate,
     };
 }
 

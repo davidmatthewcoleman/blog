@@ -77,7 +77,7 @@ export async function getStaticPaths() {
     };
 }
 
-export async function getStaticProps({ params }: any) {
+export async function getStaticProps({ context, params }: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -90,6 +90,21 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
+    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        headers: {
+            cookie: context.req.headers.cookie || '',
+        },
+    });
+
+    const auth = await resAuth.json();
+    let revalidate;
+
+    if ( auth ) {
+        revalidate = 1;
+    } else {
+        revalidate = 300;
+    }
+
     return {
         props: {
             menu,
@@ -98,7 +113,7 @@ export async function getStaticProps({ params }: any) {
             allPosts,
             tag
         },
-        revalidate: 300,
+        revalidate: revalidate,
     };
 }
 

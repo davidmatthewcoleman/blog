@@ -110,7 +110,7 @@ export async function getStaticPaths() {
     };
 }
 
-export async function getStaticProps({ params }: any) {
+export async function getStaticProps({ context, params }: any) {
     const { slug, page } = params;
     const pageNumber = parseInt(page, 10);
 
@@ -130,6 +130,21 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
     ]);
 
+    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        headers: {
+            cookie: context.req.headers.cookie || '',
+        },
+    });
+
+    const auth = await resAuth.json();
+    let revalidate;
+
+    if ( auth ) {
+        revalidate = 1;
+    } else {
+        revalidate = 300;
+    }
+
     return {
         props: {
             menu,
@@ -140,7 +155,7 @@ export async function getStaticProps({ params }: any) {
             breadcrumb,
             pageNumber
         },
-        revalidate: 300,
+        revalidate: revalidate,
     };
 }
 
