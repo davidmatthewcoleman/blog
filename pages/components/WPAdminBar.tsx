@@ -2,7 +2,7 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 
-const WPAdminBar = ({ adminBarHtml }: { adminBarHtml: any }) => {
+const WPAdminBar = ({ adminBarHtml = '' }: { adminBarHtml: any }) => {
     // Render only if adminBarHtml is provided
     if (!adminBarHtml || adminBarHtml.trim() === '') return null;
 
