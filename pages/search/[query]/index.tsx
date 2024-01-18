@@ -81,7 +81,7 @@ function Search({ adminBarHtml, menu, options, latestPosts, allPosts, query }: {
     );
 }
 
-export async function getServerSideProps({ params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -94,6 +94,14 @@ export async function getServerSideProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=9999&search=${params.query}&_embed`).then(res => res.json())
     ]);
 
+    // Authenticate the user (example)
+    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        headers: {
+            cookie: context.req.headers.cookie || '',
+        },
+    });
+    const auth = await resAuth.json();
+
     return {
         props: {
             menu,
@@ -101,6 +109,7 @@ export async function getServerSideProps({ params }: any) {
             latestPosts,
             allPosts,
             query: params.query, // Pass the query parameter to the component
+            isAuthenticated: auth.isAuthenticated
         },
     };
 }

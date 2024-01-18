@@ -12,16 +12,16 @@ function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag}: {adminBa
         <>
             <Head>
                 <title>{tag[0].name} &ndash; {options.name}</title>
-                <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-                <link rel="manifest" href="/icons/site.webmanifest" />
-                <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000" />
-                <link rel="shortcut icon" href="/icons/favicon.ico" />
-                <meta name="msapplication-TileColor" content="#000000" />
-                <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
-                <meta name="msapplication-config" content="/icons/browserconfig.xml" />
-                <meta name="theme-color" content="#000000" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png"/>
+                <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png"/>
+                <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png"/>
+                <link rel="manifest" href="/icons/site.webmanifest"/>
+                <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000"/>
+                <link rel="shortcut icon" href="/icons/favicon.ico"/>
+                <meta name="msapplication-TileColor" content="#000000"/>
+                <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png"/>
+                <meta name="msapplication-config" content="/icons/browserconfig.xml"/>
+                <meta name="theme-color" content="#000000"/>
             </Head>
             <Layout adminBarHtml={adminBarHtml}>
                 <WpImage
@@ -41,19 +41,20 @@ function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag}: {adminBa
                             }
                         ]
                     }}
-                    focalPoint={[50,50]}
+                    focalPoint={[50, 50]}
                     className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
                     props={``}
                 />
                 <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
-                    <Header menu={menu} options={options} latestPosts={latestPosts} />
+                    <Header menu={menu} options={options} latestPosts={latestPosts}/>
                     <PostList allPosts={allPosts} header={(
-                        <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
+                        <div
+                            className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
                             <strong className={`font-bold`}>Tag:</strong>&nbsp;{tag[0].name}
                         </div>
                     )}
-                    pageNumber={1}
-                    options={options}
+                              pageNumber={1}
+                              options={options}
                     />
                 </main>
             </Layout>
@@ -61,23 +62,7 @@ function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag}: {adminBa
     )
 }
 
-export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999`);
-    const tags = await res.json();
-
-    const paths = tags.map((tag: any) => ({
-        params: { slug: tag.slug },
-    }));
-
-    // console.log(paths);
-
-    return {
-        paths,
-        fallback: false,
-    };
-}
-
-export async function getStaticProps({ context, params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -90,20 +75,13 @@ export async function getStaticProps({ context, params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
+    // Authenticate the user (example)
     const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
         headers: {
             cookie: context.req.headers.cookie || '',
         },
     });
-
     const auth = await resAuth.json();
-    let revalidate;
-
-    if ( auth ) {
-        revalidate = 1;
-    } else {
-        revalidate = 300;
-    }
 
     return {
         props: {
@@ -111,9 +89,9 @@ export async function getStaticProps({ context, params }: any) {
             options,
             latestPosts,
             allPosts,
-            tag
-        },
-        revalidate: revalidate,
+            tag,
+            isAuthenticated: auth.isAuthenticated
+        }
     };
 }
 

@@ -78,39 +78,7 @@ function Topic({adminBarHtml, menu, options, latestPosts, allPosts, topic, bread
     )
 }
 
-export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999`);
-    const topics = await res.json();
-
-    const paths = [];
-
-    for (const topic of topics) {
-        if (!topic.slug) {
-            continue; // Skip if slug is undefined
-        }
-
-        // Fetch the total number of posts for the topic
-        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${topic.slug}`);
-        const posts = await resPosts.json();
-        const totalPagesPerTopic = Math.ceil(posts.length / 8);
-
-        for (let pageNumber = 1; pageNumber <= totalPagesPerTopic; pageNumber++) {
-            paths.push({
-                params: {
-                    slug: topic.slug,
-                    page: pageNumber.toString()
-                }
-            });
-        }
-    }
-
-    return {
-        paths,
-        fallback: 'blocking',
-    };
-}
-
-export async function getStaticProps({ context, params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     const { slug, page } = params;
     const pageNumber = parseInt(page, 10);
 
@@ -130,20 +98,13 @@ export async function getStaticProps({ context, params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
     ]);
 
+    // Authenticate the user (example)
     const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
         headers: {
             cookie: context.req.headers.cookie || '',
         },
     });
-
     const auth = await resAuth.json();
-    let revalidate;
-
-    if ( auth ) {
-        revalidate = 1;
-    } else {
-        revalidate = 300;
-    }
 
     return {
         props: {
@@ -153,9 +114,9 @@ export async function getStaticProps({ context, params }: any) {
             allPosts,
             topic,
             breadcrumb,
-            pageNumber
-        },
-        revalidate: revalidate,
+            pageNumber,
+            isAuthenticated: auth.isAuthenticated
+        }
     };
 }
 

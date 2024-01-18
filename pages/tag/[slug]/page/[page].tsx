@@ -63,39 +63,7 @@ function Tag({adminBarHtml, menu, options, latestPosts, allPosts, tag, pageNumbe
     )
 }
 
-export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999`);
-    const tags = await res.json();
-
-    const paths = [];
-
-    for (const tag of tags) {
-        if (!tag.slug) {
-            continue; // Skip if slug is undefined
-        }
-
-        // Fetch the total number of posts for the topic
-        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=post_tag&filter[term]=${tag.slug}`);
-        const posts = await resPosts.json();
-        const totalPagesPerTopic = Math.ceil(posts.length / 8);
-
-        for (let pageNumber = 1; pageNumber <= totalPagesPerTopic; pageNumber++) {
-            paths.push({
-                params: {
-                    slug: tag.slug,
-                    page: pageNumber.toString()
-                }
-            });
-        }
-    }
-
-    return {
-        paths,
-        fallback: 'blocking',
-    };
-}
-
-export async function getStaticProps({ context, params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     const { slug, page } = params;
     const pageNumber = parseInt(page, 10);
 
@@ -111,20 +79,13 @@ export async function getStaticProps({ context, params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
+    // Authenticate the user (example)
     const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
         headers: {
             cookie: context.req.headers.cookie || '',
         },
     });
-
     const auth = await resAuth.json();
-    let revalidate;
-
-    if ( auth ) {
-        revalidate = 1;
-    } else {
-        revalidate = 300;
-    }
 
     return {
         props: {
@@ -133,9 +94,9 @@ export async function getStaticProps({ context, params }: any) {
             latestPosts,
             allPosts,
             tag,
-            pageNumber
-        },
-        revalidate: revalidate,
+            pageNumber,
+            isAuthenticated: auth.isAuthenticated
+        }
     };
 }
 

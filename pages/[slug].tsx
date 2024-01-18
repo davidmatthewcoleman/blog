@@ -62,25 +62,7 @@ export default function PostPage({adminBarHtml, menu, options, latestPosts, curr
     )
 }
 
-export async function getStaticPaths() {
-    const [posts, pages] = await Promise.all([
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/pages?per_page=9999`).then(res => res.json()),
-    ]);
-
-    const allPosts = [...posts, ...pages];
-
-    const paths = allPosts.map((post: any) => ({
-        params: { slug: post.slug },
-    }));
-
-    return {
-        paths,
-        fallback: 'blocking',
-    };
-}
-
-export async function getStaticProps({ context, params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     try {
         const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
         const menus = await resMenuIDs.json();
@@ -97,20 +79,13 @@ export async function getStaticProps({ context, params }: any) {
         const currentPost = [...currentPosts, ...currentPages];
         const latestPostsAside = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=3`).then(res => res.json());
 
+        // Authenticate the user (example)
         const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
             headers: {
                 cookie: context.req.headers.cookie || '',
             },
         });
-
         const auth = await resAuth.json();
-        let revalidate;
-
-        if ( auth ) {
-            revalidate = 1;
-        } else {
-            revalidate = 300;
-        }
 
         return {
             props: {
@@ -118,9 +93,9 @@ export async function getStaticProps({ context, params }: any) {
                 options,
                 latestPosts,
                 currentPost,
-                latestPostsAside
-            },
-            revalidate: revalidate,
+                latestPostsAside,
+                isAuthenticated: auth.isAuthenticated
+            }
         };
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -130,8 +105,7 @@ export async function getStaticProps({ context, params }: any) {
                 options: null,
                 latestPosts: null,
                 allPosts: null,
-            },
-            revalidate: 300,
+            }
         };
     }
 }

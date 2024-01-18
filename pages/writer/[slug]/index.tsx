@@ -60,21 +60,7 @@ function Writer({adminBarHtml, menu, options, latestPosts, allPosts, writer}: {a
     )
 }
 
-export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?per_page=9999`);
-    const authors = await res.json();
-
-    const paths = authors.map((author: any) => ({
-        params: { slug: author.slug },
-    }));
-
-    return {
-        paths,
-        fallback: false,
-    };
-}
-
-export async function getStaticProps({ context, params }: any) {
+export async function getServerSideProps({ context, params }: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -87,20 +73,13 @@ export async function getStaticProps({ context, params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`).then(res => res.json())
     ]);
 
+    // Authenticate the user (example)
     const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
         headers: {
             cookie: context.req.headers.cookie || '',
         },
     });
-
     const auth = await resAuth.json();
-    let revalidate;
-
-    if ( auth ) {
-        revalidate = 1;
-    } else {
-        revalidate = 300;
-    }
 
     return {
         props: {
@@ -108,9 +87,9 @@ export async function getStaticProps({ context, params }: any) {
             options,
             latestPosts,
             allPosts,
-            writer
-        },
-        revalidate: revalidate,
+            writer,
+            isAuthenticated: auth.isAuthenticated
+        }
     };
 }
 

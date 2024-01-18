@@ -102,7 +102,13 @@ export async function getServerSideProps(context: any) {
     const resPosts = await fetch(postsUrl);
     const allPosts = await resPosts.json();
 
-    // console.log(pageNumber);
+    // Authenticate the user (example)
+    const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        headers: {
+            cookie: context.req.headers.cookie || '',
+        },
+    });
+    const auth = await resAuth.json();
 
     return {
         props: {
@@ -111,7 +117,8 @@ export async function getServerSideProps(context: any) {
             latestPosts,
             allPosts,
             query,
-            pageNumber
+            pageNumber,
+            isAuthenticated: auth.isAuthenticated
         },
     };
 }
