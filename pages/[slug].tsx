@@ -80,7 +80,7 @@ export async function getServerSideProps({ context, params }: any) {
         const latestPostsAside = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=3`).then(res => res.json());
 
         // Authenticate the user (example)
-        const resAuth = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authenticate`, {
+        const resAuth = await fetch(`${process.env.FRONTEND_HOST}/api/authenticate`, {
             headers: {
                 cookie: context.req.headers.cookie || '',
             },
