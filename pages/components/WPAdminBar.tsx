@@ -10,6 +10,10 @@ const WPAdminBar = (adminBarHtml: any) => {
     );
 };
 
+function trimSlashes(str: string | undefined) {
+    if (!str) return '';
+    return str.replace(/^\/|\/$/g, '');
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Redirect if this page is accessed directly
@@ -31,9 +35,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     try {
-        const slug = context.params?.slug; // assuming 'slug' is a dynamic route parameter
+        const rawSlug = context.params?.slug as string | undefined;
+        const slug = trimSlashes(rawSlug);  // Trim slashes from the slug
         const adminBarUrl = slug
-            ? `${process.env.WORDPRESS_HOST}/${slug}?adminbar=show`
+            ? `${process.env.WORDPRESS_HOST}/${slug}/?adminbar=show`
             : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
         const response = await fetch(adminBarUrl, {
