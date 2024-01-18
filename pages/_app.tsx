@@ -1,17 +1,15 @@
-import '@/styles/globals.css'
-import React from "react";
-import App from 'next/app'
+import '@/styles/globals.css';
+import React from 'react';
+import App, { AppContext } from 'next/app';
 import cheerio from 'cheerio';
-import { useRouter } from 'next/router'
-import {GetServerSideProps} from "next";
 
 class WebApp extends App {
-   static async getInitialProps(appContext: any) {
+   static async getInitialProps(appContext: AppContext) {
       const { ctx } = appContext;
       let slug = '';
 
       // Function to extract slug based on route type
-      const extractSlug = (path: any) => {
+      const extractSlug = (path: string) => {
          const topicMatch = path.match(/\/topic\/([^\/?]+)/);
          if (topicMatch) return topicMatch[1];
 
@@ -29,7 +27,7 @@ class WebApp extends App {
 
       if (ctx.req) {
          // Server-side: Extract slug from the request URL
-         slug = extractSlug(ctx.req.url);
+         slug = extractSlug(ctx.req.url || '');
       } else {
          // Client-side: Use window.location.pathname
          slug = extractSlug(window.location.pathname);
@@ -40,13 +38,32 @@ class WebApp extends App {
           ? `${process.env.WORDPRESS_HOST}/${slug}/?adminbar=show`
           : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
-      // Fetch the admin bar HTML
-      const res = await fetch(adminBarUrl);
-      const adminBarHtml = await res.text();
+      let adminBarHtml: string | null = '';
+      if (ctx.req) {
+         // Forward cookies from the incoming request to the fetch request
+         const cookies = ctx.req.headers.cookie || '';
 
-      // Use Cheerio to parse the HTML
-      const $ = cheerio.load(adminBarHtml);
-      const isAdminBarPresent = $('#wpadminbar').length > 0;
+         try {
+            // Fetch the admin bar HTML, including the cookies in the request
+            const res = await fetch(adminBarUrl, {
+               headers: {
+                  'Cookie': cookies,
+               },
+            });
+
+            if (!res.ok) {
+               throw new Error(`Failed to fetch admin bar: ${res.statusText}`);
+            }
+            adminBarHtml = await res.text();
+
+            // Use Cheerio to parse the HTML
+            const $ = cheerio.load(adminBarHtml);
+            const isAdminBarPresent = $('#wpadminbar').length > 0;
+            adminBarHtml = isAdminBarPresent ? adminBarHtml : null;
+         } catch (error) {
+            console.error('Error fetching admin bar:', error);
+         }
+      }
 
       // Call the original getInitialProps method
       const appProps = await App.getInitialProps(appContext);
@@ -56,7 +73,7 @@ class WebApp extends App {
          ...appProps,
          pageProps: {
             ...appProps.pageProps,
-            adminBarHtml: isAdminBarPresent ? adminBarHtml : null,
+            adminBarHtml: adminBarHtml,
             key: slug
          }
       };
