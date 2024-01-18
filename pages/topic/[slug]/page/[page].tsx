@@ -6,7 +6,7 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
-import WPAdminBar from "@/components/WPAdminBar";
+import WPAdminBar from "@/pages/components/WPAdminBar";
 
 function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, pageNumber: number}) {
     return (

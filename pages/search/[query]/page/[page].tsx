@@ -6,7 +6,7 @@ import {any} from "prop-types";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
+import WPAdminBar from "@/pages/components/WPAdminBar";
 
 function Search({ menu, options, latestPosts, allPosts, query, pageNumber }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number }) {
     let transformedData: any = [];

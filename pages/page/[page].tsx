@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import React from "react";
 import { useRouter } from 'next/router';
-import WPAdminBar from "@/components/WPAdminBar";
+import WPAdminBar from "@/pages/components/WPAdminBar";
 
 
 function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
