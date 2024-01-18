@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import cache from 'memory-cache';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -8,7 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log('Webhook received:', eventType);
 
         if (eventType === 'login' || eventType === 'logout') {
-            // Your cache invalidation logic
+            cache.clear();
             res.status(200).json({ message: `Cache invalidated for ${eventType} event` });
         } else {
             res.status(200).json({ message: 'No relevant event type found' });
