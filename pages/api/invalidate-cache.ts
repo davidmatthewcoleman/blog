@@ -7,7 +7,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // You can access the request body and headers to determine the event and take appropriate actions
 
         // Example: Check if it's a login event
-        if (req.headers['x-wordpress-event'] === 'login') {
+        if (req.headers['X-WordPress-Event'] === 'login') {
             cache.clear();
             // Perform cache invalidation logic for login event here
             // You can use your preferred caching mechanism or logic
@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         // Example: Check if it's a logout event
-        if (req.headers['x-wordpress-event'] === 'logout') {
+        if (req.headers['X-WordPress-Event'] === 'logout') {
             cache.clear();
             // Perform cache invalidation logic for logout event here
             // You can use your preferred caching mechanism or logic
