@@ -24,7 +24,6 @@ function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNum
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}
