@@ -5,7 +5,7 @@ import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
-import WPAdminBar from "@/pages/components/WPAdminBar";
+import WPAdminBar from "@/components/WPAdminBar";
 
 function Writer({menu, options, latestPosts, allPosts, writer}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any}) {
     return (
@@ -23,7 +23,6 @@ function Writer({menu, options, latestPosts, allPosts, writer}: {menu: any, opti
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}

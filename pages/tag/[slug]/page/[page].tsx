@@ -1,11 +1,12 @@
 import Image from 'next/image'
+import dynamic from 'next/dynamic';
 
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
-import WPAdminBar from "@/pages/components/WPAdminBar";
+
 
 function Tag({menu, options, latestPosts, allPosts, tag, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any}) {
     return (
@@ -23,7 +24,6 @@ function Tag({menu, options, latestPosts, allPosts, tag, pageNumber}: {menu: any
                 <meta name="msapplication-config" content="/icons/browserconfig.xml" />
                 <meta name="theme-color" content="#000000" />
             </Head>
-            <WPAdminBar/>
             <WpImage
                 alt={options.name}
                 url={options.site_background_url}

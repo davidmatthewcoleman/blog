@@ -9,7 +9,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import WpImage from "@/components/wpImage";
 import React from "react";
-import WPAdminBar from "@/pages/components/WPAdminBar";
+import WPAdminBar from "@/components/WPAdminBar";
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
     return (
