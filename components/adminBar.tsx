@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import cheerio from 'cheerio';
 
 const AdminBar = () => {
     const [adminBarHtml, setAdminBarHtml] = useState('');
     const router = useRouter();
-    const { slug } = router.query; // Assuming 'slug' is the dynamic part of your route
+    const { slug } = router.query;
 
     useEffect(() => {
         const fetchAdminBar = async () => {
@@ -13,13 +14,26 @@ const AdminBar = () => {
                 : `${process.env.WORDPRESS_HOST}/?adminbar=show`;
 
             try {
+                // Fetching cookies from the browser (if accessible)
+                const cookies = document.cookie;
+
                 const res = await fetch(adminBarUrl, {
+                    headers: {
+                        'Cookie': cookies,
+                    },
                     credentials: 'include',
                 });
 
                 if (res.ok) {
                     const html = await res.text();
-                    setAdminBarHtml(html);
+
+                    // Use Cheerio to parse the HTML and check for #wpadminbar
+                    const $ = cheerio.load(html);
+                    const isAdminBarPresent = $('#wpadminbar').length > 0;
+
+                    if (isAdminBarPresent) {
+                        setAdminBarHtml(html);
+                    }
                 } else {
                     console.error('Failed to fetch admin bar:', res.statusText);
                 }
@@ -28,10 +42,10 @@ const AdminBar = () => {
             }
         };
 
-        if (slug || slug === '') { // Fetch admin bar if slug is present or it's the home page
+        if (typeof slug !== 'undefined') {
             fetchAdminBar();
         }
-    }, [slug]); // Re-run the effect when the slug changes
+    }, [slug]);
 
     return (
         <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
