@@ -3,14 +3,15 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 
 interface WPAdminBarProps {
-    adminBarHtml?: string; // Make it optional
+    adminBarHtml: string;
 }
 
-const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml = '' }) => {
-    if (!adminBarHtml.trim()) return null;
+const WPAdminBar: React.FC<WPAdminBarProps> = ({ adminBarHtml }) => {
+    // Render only if adminBarHtml is provided
+    if (!adminBarHtml) return null;
 
     return (
-        <div className={`wp-admin-bar-container`} dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: adminBarHtml }} />
     );
 };
 
@@ -31,12 +32,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     // Check if the user is logged in to WordPress
-    const cookies = context.req.headers.cookie;
-    const isLoggedIn = cookies && cookies.split(';').some(cookie => cookie.trim().startsWith('wordpress_logged_in_'));
-
-    if (!isLoggedIn) {
-        return { props: { adminBarHtml: null } };
-    }
+    const cookies = context.req.headers.cookie as string;
+    // const isLoggedIn = cookies && cookies.split(';').some(cookie => cookie.trim().startsWith('wordpress_logged_in_'));
+    //
+    // if (!isLoggedIn) {
+    //     return { props: { adminBarHtml: null } };
+    // }
 
     try {
         const rawSlug = context.params?.slug as string | undefined;
