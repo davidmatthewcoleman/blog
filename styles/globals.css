@@ -143,4 +143,12 @@ body {
     }
 }
 
+picture {
+    margin: 0 !important;
+}
+
+.ReactModal__Overlay {
+    z-index: 999999 !important;
+}
+
 @import "bookmarks";
