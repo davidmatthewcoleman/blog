@@ -63,7 +63,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                 href={item.url.replace(process.env.WORDPRESS_HOST, process.env.FRONTEND_HOST)}
                 target={item.target ? item.target : '_self'}
                 className={`relative block leading-loose text-bright-sun-400 pr-2 hover:text-black hover:bg-bright-sun-400 hover:pl-4 transition-all`}
-                onClick={() => setHeader(false)}
+                onClick={toggleHeader}
             >
                 {item.menu_item_parent > 0 && (
                     <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-2 scale-75 fill-white/10`}>
@@ -116,7 +116,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 <li
                                     key={post.id}
                                 >
-                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} onClick={() => setHeader(false)} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
+                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} onClick={toggleHeader} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
                                 </li>
                             ))}
                         </ul>
@@ -153,7 +153,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 href={`/`}
                                 title={options.name}
                                 className={`block max-w-max mx-auto`}
-                                onClick={() => setHeader(false)}
+                                onClick={toggleHeader}
                             >
                                 <WpImage url={options.site_logo_url} src={{
                                     '': [
@@ -166,7 +166,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                             </Link>
                             <Link
                                 href={`/`}
-                                onClick={() => setHeader(false)}
+                                onClick={toggleHeader}
                                 className={`block max-w-max py-1 px-1.5 mt-6 mx-auto mb-2 rounded text-xl font-bold leading-tight text-bright-sun-400 hover:text-black hover:bg-bright-sun-400 transition-colors text-center`}
                             >
                                 {options.name}
