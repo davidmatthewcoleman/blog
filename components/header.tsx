@@ -14,19 +14,8 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
     }
 
     const closeHeader = () => {
-        console.log('closeHeader called', headerState);
         setHeader(false);
     }
-
-    useEffect(() => {
-        // Set up the event listener
-        window.addEventListener('resize', closeHeader);
-
-        // Clean up the event listener
-        return () => {
-            window.removeEventListener('resize', closeHeader);
-        };
-    }, [headerState]);
 
     useEffect(() => {
         const content = document.getElementById('content');
