@@ -10,20 +10,35 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
     const router = useRouter();
 
     const toggleHeader = () => {
-        setHeader(headerState === false ? true : false);
+        setHeader(!headerState);
+    }
+
+    const closeHeader = () => {
+        console.log('closeHeader called', headerState);
+        setHeader(false);
     }
 
     useEffect(() => {
-        const content = document.querySelector('#content');
+        // Set up the event listener
+        window.addEventListener('resize', closeHeader);
+
+        // Clean up the event listener
+        return () => {
+            window.removeEventListener('resize', closeHeader);
+        };
+    }, [headerState]);
+
+    useEffect(() => {
+        const content = document.getElementById('content');
         if (content) {
             if (headerState) {
-                content.classList.add('max-h-0');
-                content.classList.add('lg:max-h-max');
+                content.classList.add('h-0');
+                content.classList.add('lg:h-max');
                 content.classList.add('overflow-hidden');
                 content.classList.add('lg:overflow-auto');
             } else {
-                content.classList.remove('max-h-0');
-                content.classList.remove('lg:max-h-max');
+                content.classList.remove('h-0');
+                content.classList.remove('lg:h-max');
                 content.classList.remove('overflow-hidden');
                 content.classList.remove('lg:overflow-auto');
             }
@@ -63,7 +78,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                 href={item.url.replace(process.env.WORDPRESS_HOST, process.env.FRONTEND_HOST)}
                 target={item.target ? item.target : '_self'}
                 className={`relative block leading-loose text-bright-sun-400 pr-2 hover:text-black hover:bg-bright-sun-400 hover:pl-4 transition-all`}
-                onClick={toggleHeader}
+                onClick={closeHeader}
             >
                 {item.menu_item_parent > 0 && (
                     <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-2 scale-75 fill-white/10`}>
@@ -79,9 +94,6 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
     // Render the top-level menu items
     const renderMenuItems = hierarchy.filter((item: any) => item.menu_item_parent === 0);
 
-
-
-
     return (
         <header className={`lg:sticky lg:top-0 w-full lg:w-1/3 xl:w-1/4 2xl:w-1/5 ${headerState ? 'closed' : 'open'} overflow-hidden font-sans bg-black/80 h-auto max-h-max lg:h-screen backdrop-blur-md backdrop-saturate-200`}>
             <button onClick={toggleHeader} className={`flex flex-row ${headerState ? 'text-white/50' : 'text-bright-sun-400'} max-w-max pt-7 pb-3 my-0 mx-auto`}>
@@ -94,7 +106,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                 </span>
             </button>
             <div className={`inner w-full lg:w-[200%] flex flex-col lg:grid lg:grid-cols-2 ${headerState ? 'max-h-fit lg:translate-x-0' : 'max-h-0 lg:max-h-fit lg:-translate-x-1/2'} transition-all`}>
-                <div className={`menu-section h-auto min-h-full lg:h-[calc(100vh-4em)] px-6 xl:order-1 overflow-y-auto transition-all xl:transition-none scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
+                <div className={`menu-section h-auto min-h-full lg:h-[calc(100vh-4em)] px-6 lg:order-1 overflow-y-auto transition-all xl:transition-none scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
                     <h3
                         className={`uppercase text-md text-white/50 mt-8 mb-4`}
                     >
@@ -116,7 +128,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 <li
                                     key={post.id}
                                 >
-                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} onClick={toggleHeader} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
+                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} onClick={closeHeader} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
                                 </li>
                             ))}
                         </ul>
@@ -146,14 +158,14 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                         </button>
                     </form>
                 </div>
-                <div className={`home-section h-auto xl:h-[calc(100vh-4em)] -order-1 xl:order-2 overflow-y-auto`}>
+                <div className={`home-section h-auto xl:h-[calc(100vh-4em)] -order-1 lg:order-2 overflow-y-auto`}>
                     {options && (
                         <>
                             <Link
                                 href={`/`}
                                 title={options.name}
                                 className={`block max-w-max mx-auto`}
-                                onClick={toggleHeader}
+                                onClick={closeHeader}
                             >
                                 <WpImage url={options.site_logo_url} src={{
                                     '': [
@@ -166,7 +178,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                             </Link>
                             <Link
                                 href={`/`}
-                                onClick={toggleHeader}
+                                onClick={closeHeader}
                                 className={`block max-w-max py-1 px-1.5 mt-6 mx-auto mb-2 rounded text-xl font-bold leading-tight text-bright-sun-400 hover:text-black hover:bg-bright-sun-400 transition-colors text-center`}
                             >
                                 {options.name}
