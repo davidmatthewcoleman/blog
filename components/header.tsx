@@ -4,57 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import WpImage from "@/components/wpImage";
 
-const Nav = ({ menu }: { menu: any }) => {
-    menu.forEach((item: any) => {
-        item.menu_item_parent = parseInt(item.menu_item_parent, 10);
-    });
-    // Create a hierarchy based on the parent-child relationship
-    const createHierarchy = (items: any, parentId = 0) =>
-        items
-            .filter((item: any) => item.menu_item_parent === parentId)
-            .map((item: any) => ({
-                ...item,
-                children: createHierarchy(items, item.ID),
-            }));
-
-// ...
-
-    const hierarchy = createHierarchy(menu);
-
-    console.log('Filtered Menu: ', JSON.stringify(menu));
-
-    // Render a menu item and its children
-    const renderMenuItem = (item: any) => (
-        <li key={item.ID}>
-            <Link
-                href={item.url}
-                className={`relative block leading-loose text-bright-sun-400 pr-2 hover:text-black hover:bg-bright-sun-400 hover:pl-4 transition-all`}
-            >
-                {item.menu_item_parent > 0 && (
-                    <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-2 scale-75 fill-white/10`}>
-                        <path d="M173 552h318v173H0V0h173v552Z"/>
-                    </svg>
-                )}
-                {item.title}
-            </Link>
-            {item.children.length > 0 && <ul className={`flex flex-col pl-4 list-none`}>{item.children.map((child: any) => renderMenuItem(child))}</ul>}
-        </li>
-    );
-
-    // Render the top-level menu items
-    const renderMenuItems = hierarchy.filter((item: any) => item.menu_item_parent === 0);
-
-    return (
-        <>
-            <ul
-                className={`flex flex-col mb-6 list-none`}
-            >
-                {renderMenuItems.map((item: any) => renderMenuItem(item))}
-            </ul>
-        </>
-    );
-};
-
 function Header({menu, options, latestPosts}: {menu: any, options: any, latestPosts: any}) {
     const [headerState, setHeader] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -88,6 +37,53 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
         router.push(`/search/${formattedQuery}`);
     };
 
+
+
+
+    menu.forEach((item: any) => {
+        item.menu_item_parent = parseInt(item.menu_item_parent, 10);
+    });
+    // Create a hierarchy based on the parent-child relationship
+    const createHierarchy = (items: any, parentId = 0) =>
+        items
+            .filter((item: any) => item.menu_item_parent === parentId)
+            .map((item: any) => ({
+                ...item,
+                children: createHierarchy(items, item.ID),
+            }));
+
+// ...
+
+    const hierarchy = createHierarchy(menu);
+
+    console.log('Filtered Menu: ', JSON.stringify(menu));
+
+    // Render a menu item and its children
+    const renderMenuItem = (item: any) => (
+        <li key={item.ID}>
+            <Link
+                href={item.url.replace(process.env.WORDPRESS_HOST, process.env.FRONTEND_HOST)}
+                target={item.target ? item.target : '_self'}
+                className={`relative block leading-loose text-bright-sun-400 pr-2 hover:text-black hover:bg-bright-sun-400 hover:pl-4 transition-all`}
+                onClick={() => setHeader(false)}
+            >
+                {item.menu_item_parent > 0 && (
+                    <svg viewBox="0 0 492 726" height={16} className={`absolute top-0 -left-4 bottom-0 my-2 scale-75 fill-white/10`}>
+                        <path d="M173 552h318v173H0V0h173v552Z"/>
+                    </svg>
+                )}
+                {item.title}
+            </Link>
+            {item.children.length > 0 && <ul className={`flex flex-col pl-4 list-none`}>{item.children.map((child: any) => renderMenuItem(child))}</ul>}
+        </li>
+    );
+
+    // Render the top-level menu items
+    const renderMenuItems = hierarchy.filter((item: any) => item.menu_item_parent === 0);
+
+
+
+
     return (
         <header className={`lg:sticky lg:top-0 w-full lg:w-1/3 xl:w-1/4 2xl:w-1/5 ${headerState ? 'closed' : 'open'} overflow-hidden font-sans bg-black/80 h-auto max-h-max lg:h-screen backdrop-blur-md backdrop-saturate-200`}>
             <button onClick={toggleHeader} className={`flex flex-row ${headerState ? 'text-white/50' : 'text-bright-sun-400'} max-w-max pt-7 pb-3 my-0 mx-auto`}>
@@ -106,7 +102,11 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                     >
                         Navigation
                     </h3>
-                    <Nav menu={menu}/>
+                    <ul
+                        className={`flex flex-col mb-6 list-none`}
+                    >
+                        {renderMenuItems.map((item: any) => renderMenuItem(item))}
+                    </ul>
                     <h3
                         className={`uppercase text-md text-white/50 my-4`}
                     >
