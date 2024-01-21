@@ -65,7 +65,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
     }
 
     return (
-        <section className={`single-post flex flex-col w-full bg-amber-50`}>
+        <section id={`content`} className={`single-post flex flex-col w-full bg-amber-50`}>
             {post.map((post: any) => {
                 if (post.featured_media !== false) {
                     return (

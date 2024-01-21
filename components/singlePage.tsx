@@ -51,7 +51,7 @@ function SinglePage({ post, latestPosts, options }: { post: any, latestPosts: an
     }, []);
 
     return (
-        <section className={`single-post flex flex-col w-full bg-amber-50`}>
+        <section id={`content`} className={`single-post flex flex-col w-full bg-amber-50`}>
             {post.map((post: any) => {
                 return (
                     <React.Fragment key={post.id}>
