@@ -5,14 +5,23 @@ import { useRouter } from 'next/router';
 import WpImage from "@/components/wpImage";
 
 const Nav = ({ menu }: { menu: any }) => {
+    menu.forEach((item: any) => {
+        item.menu_item_parent = parseInt(item.menu_item_parent, 10);
+    });
     // Create a hierarchy based on the parent-child relationship
-    const createHierarchy = (items: any, parentId = '0') =>
+    const createHierarchy = (items: any, parentId = 0) =>
         items
             .filter((item: any) => item.menu_item_parent === parentId)
-            .map((item: any) => ({ ...item, children: createHierarchy(items, item.ID) }));
+            .map((item: any) => ({
+                ...item,
+                children: createHierarchy(items, item.ID),
+            }));
 
-    // Create the hierarchy for rendering
+// ...
+
     const hierarchy = createHierarchy(menu);
+
+    console.log('Filtered Menu: ', JSON.stringify(menu));
 
     // Render a menu item and its children
     const renderMenuItem = (item: any) => (
@@ -33,7 +42,7 @@ const Nav = ({ menu }: { menu: any }) => {
     );
 
     // Render the top-level menu items
-    const renderMenuItems = hierarchy.filter((item: any) => item.menu_item_parent === '0');
+    const renderMenuItems = hierarchy.filter((item: any) => item.menu_item_parent === 0);
 
     return (
         <>
