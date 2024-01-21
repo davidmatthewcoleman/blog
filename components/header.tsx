@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import WpImage from "@/components/wpImage";
 
@@ -55,6 +55,19 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
         setHeader(headerState === false ? true : false);
     }
 
+    useEffect(() => {
+        const content = document.querySelector('#content');
+        if (content) {
+            if (headerState) {
+                content.classList.add('max-h-0');
+                content.classList.add('overflow-hidden');
+            } else {
+                content.classList.remove('max-h-0');
+                content.classList.remove('overflow-hidden');
+            }
+        }
+    }, [headerState]);
+
     const handleSearch = () => {
         // Replace spaces with '+' in the search query
         const formattedQuery = searchQuery.split(' ').join('+');
@@ -73,8 +86,8 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                     Menu
                 </span>
             </button>
-            <div className={`inner w-full xl:w-[200%] flex flex-col xl:grid xl:grid-cols-2 ${headerState ? 'xl:translate-x-0' : 'xl:-translate-x-1/2'} transition-transform`}>
-                <div className={`menu-section h-auto xl:h-[calc(100vh-4em)] px-6 xl:order-1 ${headerState ? 'max-h-full' : 'max-h-0'} overflow-y-auto transition-all scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
+            <div className={`inner w-full xl:w-[200%] flex flex-col xl:grid xl:grid-cols-2 ${headerState ? 'max-h-fit xl:translate-x-0' : 'max-h-0 xl:max-h-fit xl:-translate-x-1/2'} transition-all`}>
+                <div className={`menu-section h-auto min-h-full xl:h-[calc(100vh-4em)] px-6 xl:order-1 overflow-y-auto transition-all xl:transition-none scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
                     <h3
                         className={`uppercase text-md text-white/50 mt-8 mb-4`}
                     >

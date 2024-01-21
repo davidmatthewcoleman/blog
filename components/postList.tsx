@@ -69,7 +69,7 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
     // console.log(currentPage);
 
     return (
-        <section className={`post-list relative flex flex-col w-full bg-amber-50 bar-left/50 before:w-[48px] xl:before:w-[64px]`}>
+        <section id={`content`} className={`post-list relative flex flex-col w-full bg-amber-50 bar-left/50 before:w-[48px] xl:before:w-[64px]`}>
             {header}
             {displayedPosts.map((post: any) => {
                 if (post.featured_media !== false) {
