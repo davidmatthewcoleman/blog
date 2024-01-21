@@ -9,36 +9,40 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
     const { asPath } = router;
     let nextPageUrl: any, prevPageUrl: any;
 
+    // Function to create the correct page URL
+    const createPageUrl = (base: string, pageNum: number) => {
+        // For page 1, don't add the page number to the URL
+        return pageNum === 1 ? base : `${base}/page/${pageNum}`;
+    };
+
     // Determine the current [slug]'s route dynamically
     if (asPath === '/') {
-        // Home [slug] ("/")
-        nextPageUrl = `/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/page/${pageNumber - 1}` : '/';
+        nextPageUrl = createPageUrl('/', pageNumber + 1);
+        prevPageUrl = createPageUrl('/', pageNumber - 1);
+    } else if (asPath.startsWith('/page/2/')) {
+        nextPageUrl = createPageUrl('/', pageNumber + 1);
+        prevPageUrl = '/';
     } else if (asPath.startsWith('/writer/')) {
-        // Writer [slug] ("/writer/[slug]")
         const writerSlug = asPath.split('/writer/')[1].split('/')[0];
-        nextPageUrl = `/writer/${writerSlug}/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/writer/${writerSlug}/page/${pageNumber - 1}` : `/writer/${writerSlug}`;
+        nextPageUrl = createPageUrl(`/writer/${writerSlug}`, pageNumber + 1);
+        prevPageUrl = createPageUrl(`/writer/${writerSlug}`, pageNumber - 1);
     } else if (asPath.startsWith('/tag/')) {
-        // Tag [slug] ("/tag/[slug]")
         const tagSlug = asPath.split('/tag/')[1].split('/')[0];
-        nextPageUrl = `/tag/${tagSlug}/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/tag/${tagSlug}/page/${pageNumber - 1}` : `/tag/${tagSlug}`;
+        nextPageUrl = createPageUrl(`/tag/${tagSlug}`, pageNumber + 1);
+        prevPageUrl = createPageUrl(`/tag/${tagSlug}`, pageNumber - 1);
     } else if (asPath.startsWith('/topic/')) {
-        // Topic [slug] ("/topic/[slug]")
         const topicSlug = asPath.split('/topic/')[1].split('/')[0];
-        nextPageUrl = `/topic/${topicSlug}/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/topic/${topicSlug}/page/${pageNumber - 1}` : `/topic/${topicSlug}`;
+        nextPageUrl = createPageUrl(`/topic/${topicSlug}`, pageNumber + 1);
+        prevPageUrl = createPageUrl(`/topic/${topicSlug}`, pageNumber - 1);
     } else if (asPath.startsWith('/search/')) {
-        // Search [slug] ("/search/[query]")
         const query = asPath.split('/search/')[1].split('/')[0];
-        nextPageUrl = `/search/${query}/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/search/${query}/page/${pageNumber - 1}` : `/search/${query}`;
+        nextPageUrl = createPageUrl(`/search/${query}`, pageNumber + 1);
+        prevPageUrl = createPageUrl(`/search/${query}`, pageNumber - 1);
     } else {
-        // Handle other routes or fallback to home [slug]
-        nextPageUrl = `/page/${pageNumber + 1}`;
-        prevPageUrl = pageNumber > 1 ? `/page/${pageNumber - 1}` : '/';
+        nextPageUrl = createPageUrl('', pageNumber + 1);
+        prevPageUrl = createPageUrl('', pageNumber - 1);
     }
+
 
     const currentPage = pageNumber ? pageNumber : 1;
     const postsPerPage = 8;
