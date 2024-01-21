@@ -132,6 +132,9 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                                             showOnCreate={true}
                                                             plugins={[sticky]}
                                                             visible={tooltipVisible}
+                                                            popperOptions={{
+                                                                 strategy: 'fixed'
+                                                            }}
                                                         >
                                                             <a
                                                                 onClick={() => handleLinkClick(post._embedded.author[0].id, [`${post._embedded.author[0].acf.tooltip_text}`,`${post._embedded.author[0].acf.page_link.url}`])}
