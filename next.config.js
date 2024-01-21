@@ -13,18 +13,6 @@ const nextConfig = {
     FRONTEND_HOST: process.env.FRONTEND_HOST,
     IMGIX_HOST: process.env.IMGIX_HOST
   },
-  async rewrites() {
-    return {
-      fallback: [
-        {
-          source: '/page/1/',
-          destination: '/',
-        },
-        // ... other beforeFiles rules ...
-      ],
-    // ... additional rules ...
-    };
-  },
   async headers() {
     return [
       {
