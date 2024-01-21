@@ -147,7 +147,7 @@ function SinglePage({ post, latestPosts, options }: { post: any, latestPosts: an
 
             <Footer loadMore={(
                 isVisible && (
-                    <button className={`inline-link !hidden xl:!inline-block !p-0 uppercase`} onClick={scrollToTop}>
+                    <button className={`inline-link !hidden lg:!inline-block !p-0 uppercase`} onClick={scrollToTop}>
                         <span className={`relative`}>Back to top</span>
                         <svg className={`relative bottom-px inline fill-black ml-0.5`} width={16} height={16} viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
                     </button>
