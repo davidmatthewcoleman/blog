@@ -56,8 +56,6 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
 
     const hierarchy = createHierarchy(menu);
 
-    console.log('Filtered Menu: ', JSON.stringify(menu));
-
     // Render a menu item and its children
     const renderMenuItem = (item: any) => (
         <li key={item.ID}>
@@ -118,7 +116,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 <li
                                     key={post.id}
                                 >
-                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
+                                    <Link className={`text-bright-sun-400 hover:text-bright-sun-500 transition-colors`} href={`/${post.slug}`} onClick={() => setHeader(false)} dangerouslySetInnerHTML={{ __html: post.title.rendered }}></Link>
                                 </li>
                             ))}
                         </ul>
