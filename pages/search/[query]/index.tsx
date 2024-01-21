@@ -3,11 +3,12 @@ import Image from 'next/image'
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import {any} from "prop-types";
+import parse from "html-react-parser";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
 
-function Search({ menu, options, latestPosts, allPosts, query }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string }) {
+function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, head: any, query: string }) {
     let transformedData: any = [];
 
     allPosts.map((post: any) => {
@@ -30,7 +31,7 @@ function Search({ menu, options, latestPosts, allPosts, query }: { menu: any, op
     return (
         <>
             <Head>
-                <title>&#34;{query.replace('+', ' ')}&#34; search results &ndash; {options.name}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -91,12 +92,15 @@ export async function getServerSideProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=9999&search=${params.query}&_embed`).then(res => res.json())
     ]);
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/search/${params.query}/`)}`).then(res => res.json());
+
     return {
         props: {
             menu,
             options,
             latestPosts,
             allPosts,
+            head,
             query: params.query, // Pass the query parameter to the component
         },
     };

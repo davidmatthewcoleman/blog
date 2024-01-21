@@ -3,11 +3,12 @@ import Image from 'next/image'
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import {any} from "prop-types";
+import parse from "html-react-parser";
 import Head from "next/head";
 import WpImage from "@/components/wpImage";
 import React from "react";
 
-function Search({ menu, options, latestPosts, allPosts, query, pageNumber }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number }) {
+function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number, head: any }) {
     let transformedData: any = [];
 
     allPosts.map((post: any) => {
@@ -30,7 +31,7 @@ function Search({ menu, options, latestPosts, allPosts, query, pageNumber }: { m
     return (
         <>
             <Head>
-                <title>&#34;{query.replace('+', ' ')}&#34; search results &ndash; {options.name}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -99,6 +100,8 @@ export async function getServerSideProps(context: any) {
     const resPosts = await fetch(postsUrl);
     const allPosts = await resPosts.json();
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/search/${query}/page/${pageNumber}/`)}`).then(res => res.json());
+
     // console.log(pageNumber);
 
     return {
@@ -108,7 +111,8 @@ export async function getServerSideProps(context: any) {
             latestPosts,
             allPosts,
             query,
-            pageNumber
+            pageNumber,
+            head
         },
     };
 }

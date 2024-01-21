@@ -3,15 +3,16 @@ import Image from 'next/image'
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
+import parse from "html-react-parser";
 import WpImage from "@/components/wpImage";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
 
-function Tag({menu, options, latestPosts, allPosts, tag, pageNumber}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any}) {
+function Tag({menu, options, latestPosts, allPosts, tag, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any, head: any}) {
     return (
         <>
             <Head>
-                <title>{tag[0].name} &ndash; {options.name}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -107,6 +108,8 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/tag/${params.slug}/page/${pageNumber}/`)}`).then(res => res.json());
+
     return {
         props: {
             menu,
@@ -114,7 +117,8 @@ export async function getStaticProps({ params }: any) {
             latestPosts,
             allPosts,
             tag,
-            pageNumber
+            pageNumber,
+            head
         },
         revalidate: 300,
     };

@@ -11,11 +11,11 @@ import WpImage from "@/components/wpImage";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
 
-export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any}) {
+export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
     return (
         <>
             <Head>
-                <title>{parse(DOMPurify.sanitize(currentPost[0].title.rendered))} &ndash; {options.name}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -95,13 +95,16 @@ export async function getStaticProps({ params }: any) {
         const currentPost = [...currentPosts, ...currentPages];
         const latestPostsAside = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=3`).then(res => res.json());
 
+        const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/${params.slug}/`)}`).then(res => res.json());
+
         return {
             props: {
                 menu,
                 options,
                 latestPosts,
                 currentPost,
-                latestPostsAside
+                latestPostsAside,
+                head
             },
             revalidate: 300,
         };

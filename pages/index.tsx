@@ -2,14 +2,15 @@ import WpImage from "@/components/wpImage";
 import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
+import parse from "html-react-parser";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
 
-function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
+function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options: any, latestPosts: any, allPosts: any, head: any}) {
   return (
       <>
           <Head>
-              <title>{options.name} &ndash; {options.description}</title>
+              {parse(head.head)}
               <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
               <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
               <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -62,12 +63,15 @@ export async function getStaticProps() {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json())
     ]);
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/`)}`).then(res => res.json());
+
     return {
         props: {
             menu,
             options,
             latestPosts,
-            allPosts
+            allPosts,
+            head
         },
         revalidate: 300,
     };

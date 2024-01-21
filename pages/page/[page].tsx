@@ -2,12 +2,13 @@ import WpImage from "@/components/wpImage";
 import Head from 'next/head';
 import Header from "@/components/header";
 import PostList from "@/components/postList";
+import parse from "html-react-parser";
 import React from "react";
 import { useRouter } from 'next/router';
 import WPAdminBar from "@/components/WPAdminBar";
 
 
-function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, latestPosts: any, allPosts: any}) {
+function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options: any, latestPosts: any, allPosts: any, head: any}) {
     const router = useRouter();
     const { page } = router.query;
     const pageNumber = parseInt(page as string, 10) || 1;
@@ -15,7 +16,7 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
     return (
         <>
             <Head>
-                <title>{options.name} &ndash; {options.description}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -57,19 +58,21 @@ function Home({menu, options, latestPosts, allPosts}: {menu: any, options: any, 
 }
 
 export async function getStaticPaths() {
-    // In this function, you should return an array of possible values for '[slug]'
-    // For example, if you have a total of 10 pages, you might return an array like this:
-    const totalNumberOfPages = 10;
-    const paths = Array.from({ length: totalNumberOfPages }, (_, i) => ({ params: { page: (i + 1).toString() } }));
+    const totalNumberOfPages = 10; // Replace with your actual total number of pages
+    const paths = Array.from({ length: totalNumberOfPages }, (_, i) => ({
+        params: { page: (i + 1).toString() },
+    }));
 
     return {
         paths,
-        fallback: false, // Set to false if you want to return a 404 for pages not in the 'paths' array
+        fallback: false,
     };
 }
 
 
-export async function getStaticProps() {
+export async function getStaticProps({ params }: any) {
+    const pageNumber = params.page ? parseInt(params.page, 10) : 1;
+
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -81,12 +84,15 @@ export async function getStaticProps() {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json())
     ]);
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/page/${pageNumber}/`)}`).then(res => res.json());
+
     return {
         props: {
             menu,
             options,
             latestPosts,
-            allPosts
+            allPosts,
+            head
         },
         revalidate: 300,
     };

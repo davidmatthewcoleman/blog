@@ -5,16 +5,17 @@ import Link from "next/link";
 import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
+import parse from "html-react-parser";
 import WpImage from "@/components/wpImage";
 import WPAdminBar from "@/components/WPAdminBar";
 
-function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any}) {
+function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, head}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, head: any}) {
     // console.log('Breadcrumb: ' + JSON.stringify(breadcrumb));
 
     return (
         <>
             <Head>
-                <title>{topic[0].name} &ndash; {options.name}</title>
+                {parse(head.head)}
                 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
@@ -109,6 +110,8 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
     ]);
 
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/topic/${params.slug}/`)}`).then(res => res.json());
+
     return {
         props: {
             menu,
@@ -116,7 +119,8 @@ export async function getStaticProps({ params }: any) {
             latestPosts,
             allPosts,
             topic,
-            breadcrumb
+            breadcrumb,
+            head
         },
         revalidate: 300,
     };
