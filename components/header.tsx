@@ -60,10 +60,14 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
         if (content) {
             if (headerState) {
                 content.classList.add('max-h-0');
+                content.classList.add('xl:max-h-max');
                 content.classList.add('overflow-hidden');
+                content.classList.add('xl:overflow-auto');
             } else {
                 content.classList.remove('max-h-0');
+                content.classList.remove('xl:max-h-max');
                 content.classList.remove('overflow-hidden');
+                content.classList.remove('xl:overflow-auto');
             }
         }
     }, [headerState]);
