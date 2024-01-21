@@ -153,6 +153,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 href={`/`}
                                 title={options.name}
                                 className={`block max-w-max mx-auto`}
+                                onClick={() => setHeader(false)}
                             >
                                 <WpImage url={options.site_logo_url} src={{
                                     '': [
@@ -165,6 +166,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                             </Link>
                             <Link
                                 href={`/`}
+                                onClick={() => setHeader(false)}
                                 className={`block max-w-max py-1 px-1.5 mt-6 mx-auto mb-2 rounded text-xl font-bold leading-tight text-bright-sun-400 hover:text-black hover:bg-bright-sun-400 transition-colors text-center`}
                             >
                                 {options.name}
