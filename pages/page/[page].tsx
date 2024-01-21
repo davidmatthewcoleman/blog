@@ -49,7 +49,7 @@ function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options:
                 className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
                 props={``}
             />
-            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+            <main className={`flex flex-col lg:flex-row max-w-[1920px] font-serif`}>
                 <Header menu={menu} options={options} latestPosts={latestPosts} />
                 <PostList allPosts={allPosts} header={false} options={options} pageNumber={pageNumber} />
             </main>

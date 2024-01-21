@@ -60,14 +60,14 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
         if (content) {
             if (headerState) {
                 content.classList.add('max-h-0');
-                content.classList.add('xl:max-h-max');
+                content.classList.add('lg:max-h-max');
                 content.classList.add('overflow-hidden');
-                content.classList.add('xl:overflow-auto');
+                content.classList.add('lg:overflow-auto');
             } else {
                 content.classList.remove('max-h-0');
-                content.classList.remove('xl:max-h-max');
+                content.classList.remove('lg:max-h-max');
                 content.classList.remove('overflow-hidden');
-                content.classList.remove('xl:overflow-auto');
+                content.classList.remove('lg:overflow-auto');
             }
         }
     }, [headerState]);
@@ -80,7 +80,7 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
     };
 
     return (
-        <header className={`xl:sticky xl:top-0 w-full xl:w-1/5 ${headerState ? 'closed' : 'open'} overflow-hidden font-sans bg-black/80 h-auto max-h-max xl:h-screen backdrop-blur-md backdrop-saturate-200`}>
+        <header className={`lg:sticky lg:top-0 w-full lg:w-1/3 xl:w-1/4 2xl:w-1/5 ${headerState ? 'closed' : 'open'} overflow-hidden font-sans bg-black/80 h-auto max-h-max xl:h-screen backdrop-blur-md backdrop-saturate-200`}>
             <button onClick={toggleHeader} className={`flex flex-row ${headerState ? 'text-white/50' : 'text-bright-sun-400'} max-w-max pt-7 pb-3 my-0 mx-auto`}>
                 <svg viewBox="0 0 24 24" width={16} height={16} className={`inline-flex fill-current my-1`}>
                     <path d={headerState ? `M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z` : `M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z`} />
@@ -90,8 +90,8 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                     Menu
                 </span>
             </button>
-            <div className={`inner w-full xl:w-[200%] flex flex-col xl:grid xl:grid-cols-2 ${headerState ? 'max-h-fit xl:translate-x-0' : 'max-h-0 xl:max-h-fit xl:-translate-x-1/2'} transition-all`}>
-                <div className={`menu-section h-auto min-h-full xl:h-[calc(100vh-4em)] px-6 xl:order-1 overflow-y-auto transition-all xl:transition-none scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
+            <div className={`inner w-full lg:w-[200%] flex flex-col lg:grid lg:grid-cols-2 ${headerState ? 'max-h-fit lg:translate-x-0' : 'max-h-0 lg:max-h-fit lg:-translate-x-1/2'} transition-all`}>
+                <div className={`menu-section h-auto min-h-full lg:h-[calc(100vh-4em)] px-6 xl:order-1 overflow-y-auto transition-all xl:transition-none scrollbar-thin scrollbar-track-black scrollbar-thumb-white/25`}>
                     <h3
                         className={`uppercase text-md text-white/50 mt-8 mb-4`}
                     >

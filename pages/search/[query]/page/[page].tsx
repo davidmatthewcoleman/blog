@@ -64,7 +64,7 @@ function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head 
                 className={`fixed inset-0 w-screen h-screen object-cover opacity-75 -z-10`}
                 props={``}
             />
-            <main className={`flex flex-col xl:flex-row max-w-[1920px] font-serif`}>
+            <main className={`flex flex-col lg:flex-row max-w-[1920px] font-serif`}>
                 <Header menu={menu} options={options} latestPosts={latestPosts} />
                 <PostList allPosts={transformedData} header={(
                     <div className={`relative py-6 px-8 text-md uppercase tracking-widest border-b border-b-black/10 bg-amber-50 z-10 font-sans`}>
