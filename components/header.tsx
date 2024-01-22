@@ -171,7 +171,8 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                                 onClick={closeHeader}
                                 className={`block max-w-max py-1 px-1.5 mt-6 mx-auto mb-2 rounded text-xl font-bold leading-tight text-bright-sun-400 hover:text-black hover:bg-bright-sun-400 transition-colors text-center`}
                             >
-                                {options.name}
+                                <span className={`hidden lg:block`}>{options.name}</span>
+                                <span className={`lg:hidden block`}>{options.shortname}</span>
                             </Link>
                             <p
                                 className={`max-w-max mt-0 mx-auto mb-6 text-lg text-white/50`}
