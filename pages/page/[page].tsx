@@ -8,10 +8,8 @@ import { useRouter } from 'next/router';
 import WPAdminBar from "@/components/WPAdminBar";
 
 
-function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options: any, latestPosts: any, allPosts: any, head: any}) {
+function Home({menu, options, latestPosts, allPosts, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, pageNumber: any, head: any}) {
     const router = useRouter();
-    const { page } = router.query;
-    const pageNumber = parseInt(page as string, 10) || 1;
 
     return (
         <>
@@ -49,20 +47,27 @@ function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options:
 }
 
 export async function getStaticPaths() {
-    const totalNumberOfPages = 10; // Replace with your actual total number of pages
+    // Example: Fetching data from an API to determine the number of pages
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`);
+    const data = await res.json();
+
+    // Calculate the total number of pages based on the data fetched
+    const totalNumberOfPages = Math.ceil(data.length / 8); // Replace 'ItemsPerPage' with your actual items per page
+
     const paths = Array.from({ length: totalNumberOfPages }, (_, i) => ({
         params: { page: (i + 1).toString() },
     }));
 
     return {
         paths,
-        fallback: true,
+        fallback: false,
     };
 }
 
 
+
 export async function getStaticProps({ params }: any) {
-    const pageNumber = params.page ? parseInt(params.page, 10) : 1;
+    const pageNumber = parseInt(params.page, 10);
 
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
@@ -83,6 +88,7 @@ export async function getStaticProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
+            pageNumber,
             head
         },
         revalidate: 300,

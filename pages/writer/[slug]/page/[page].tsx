@@ -70,7 +70,7 @@ export async function getStaticPaths() {
             paths.push({
                 params: {
                     slug: author.slug,
-                    page: pageNumber
+                    page: pageNumber.toString()
                 }
             });
         }
@@ -78,7 +78,7 @@ export async function getStaticPaths() {
 
     return {
         paths,
-        fallback: true,
+        fallback: false,
     };
 }
 
