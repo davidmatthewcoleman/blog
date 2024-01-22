@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import WpImage from "@/components/wpImage";
+import parse from "html-react-parser";
 
 function Header({menu, options, latestPosts}: {menu: any, options: any, latestPosts: any}) {
     const [headerState, setHeader] = useState(false);
@@ -180,24 +181,26 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
                             <hr
                                 className={`w-1/2 mt-0 mx-auto mb-6 h-1.5 bg-white/10 border-none rounded-sm`}
                             />
-                            <p
-                                className={`max-w-max mt-0 mx-auto mb-4 text-lg text-white/50`}
-                            >
-                                Connect
-                            </p>
-                            <ul
-                                className={`flex flex-row gap-1.5 max-w-max p-0 my-0 mb-6 mx-auto text-white/50 hover:[&_a]:text-white list-none`}
-                            >
-                                <li><a target={`_blank`} className={`transition-colors`} href={options.site_connect.mastodon}>
-                                    <svg viewBox="0 0 24 24" width={32} height={32} className={`fill-current`}><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
-                                </a></li>
-                                <li><a target={`_blank`} className={`transition-colors`} href={options.site_connect.instagram}>
-                                    <svg viewBox="0 0 24 24" width={32} height={32} className={`fill-current`}><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg>
-                                </a></li>
-                                <li><a target={`_blank`} className={`transition-colors`} href={options.site_connect.youtube}>
-                                    <svg viewBox="0 0 24 24" width={32} height={32} className={`fill-current`}><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z" /></svg>
-                                </a></li>
-                            </ul>
+                            {options.site_connect && (
+                                <>
+                                    <p
+                                        className={`max-w-max mt-0 mx-auto mb-4 text-lg text-white/50`}
+                                    >
+                                        Connect
+                                    </p>
+                                    <ul
+                                        className={`flex flex-row gap-1.5 max-w-max p-0 my-0 mb-6 mx-auto text-white/50 hover:[&_a]:text-white list-none`}
+                                    >
+                                        {options.site_connect.map((connection: any, index: number) => (
+                                            <li key={index}>
+                                                <a target={connection.link.target} className={`transition-colors`} href={connection.link.href}>
+                                                    {parse(connection.icon)}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
