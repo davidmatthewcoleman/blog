@@ -25,9 +25,20 @@ function PostNoBanner({data, single}: {data: any, single: boolean}) {
             <header
                 className={`relative`}
             >
-                <svg viewBox="0 0 20 20" width={20} height={20} className={`absolute inset-0 ${data.subtitle ? '!mb-10' : ''} ${single ? 'top-auto mb-10 xl:mb-12' : 'bottom-auto mt-8'} mx-[14px] xl:mx-[22px] fill-current z-30`}>
-                    <path d={data.type === 'post' ? 'M18 3v2H2V3h16zm-6 4v2H2V7h10zm6 0v2h-4V7h4zM8 11v2H2v-2h6zm10 0v2h-8v-2h8zm-4 4v2H2v-2h12z' : 'M3 1v18h14V1H3zm9 13H6v-1h6v1zm2-3H6v-1h8v1zm0-3H6V7h8v1zm0-3H6V4h8v1z'} />                </svg>
-                <div
+                {
+                    data.sticky ? (
+                        <svg viewBox="0 0 24 24" width={20} height={20}
+                             className={`absolute inset-0 ${data.subtitle ? '!mb-10' : ''} ${single ? 'top-auto mb-10 xl:mb-12' : 'bottom-auto mt-8'} mx-[14px] xl:mx-[22px] fill-current scale-125 z-30`}><path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z" />
+                        </svg>
+                    ) : (
+                        <svg viewBox="0 0 20 20" width={20} height={20}
+                                                            className={`absolute inset-0 ${data.subtitle ? '!mb-10' : ''} ${single ? 'top-auto mb-10 xl:mb-12' : 'bottom-auto mt-8'} mx-[14px] xl:mx-[22px] fill-current z-30`}>
+                            <path
+                                d={data.type === 'post' ? 'M18 3v2H2V3h16zm-6 4v2H2V7h10zm6 0v2h-4V7h4zM8 11v2H2v-2h6zm10 0v2h-8v-2h8zm-4 4v2H2v-2h12z' : 'M3 1v18h14V1H3zm9 13H6v-1h6v1zm2-3H6v-1h8v1zm0-3H6V7h8v1zm0-3H6V4h8v1z'}/>
+                        </svg>
+                    )
+                }
+            <div
                     className={`ml-[72px] xl:ml-[96px] my-8 mr-6 ${single ? 'xl:w-2/3' : 'xl:w-1/2'}`}
                 >
                     {data.type === 'post' && (

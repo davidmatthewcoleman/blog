@@ -15,6 +15,13 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
         return pageNum === 1 ? base : `${base}/page/${pageNum}`;
     };
 
+    // Sort posts so that sticky posts come first
+    const sortedPosts = allPosts.sort((a: any, b: any) => {
+        if (a.sticky && !b.sticky) return -1;
+        if (!a.sticky && b.sticky) return 1;
+        return 0;
+    });
+
     // Determine the current [slug]'s route dynamically
     if (asPath === '/') {
         nextPageUrl = createPageUrl('/', pageNumber + 1);
@@ -64,7 +71,7 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
 
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
-    const displayedPosts = allPosts.slice(startIndex, endIndex);
+    const displayedPosts = sortedPosts.slice(startIndex, endIndex);
 
     // console.log(currentPage);
 
