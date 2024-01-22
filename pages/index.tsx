@@ -10,8 +10,7 @@ function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options:
   return (
       <>
           <Head>
-              {parse(head.head)}
-              {parse(options.site_favicon)}
+              {parse(head.head + options.site_favicon)}
           </Head>
           <WpImage
               alt={options.name}

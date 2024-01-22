@@ -12,8 +12,7 @@ function Writer({menu, options, latestPosts, allPosts, writer, head}: {menu: any
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}

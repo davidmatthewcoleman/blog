@@ -14,8 +14,7 @@ function Home({menu, options, latestPosts, allPosts, pageNumber, head}: {menu: a
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}

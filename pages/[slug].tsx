@@ -12,11 +12,12 @@ import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
+    console.log('Head: ', head);
+
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}
@@ -65,7 +66,7 @@ export async function getStaticPaths() {
 
     return {
         paths,
-        fallback: 'blocking',
+        fallback: false,
     };
 }
 
@@ -106,7 +107,7 @@ export async function getStaticProps({ params }: any) {
                 menu: null,
                 options: null,
                 latestPosts: null,
-                allPosts: null,
+                allPosts: null
             },
             revalidate: 300,
         };

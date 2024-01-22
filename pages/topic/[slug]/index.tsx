@@ -15,8 +15,7 @@ function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, head}: 
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}

@@ -31,8 +31,7 @@ function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head 
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}

@@ -12,8 +12,7 @@ function Tag({menu, options, latestPosts, allPosts, tag, pageNumber, head}: {men
     return (
         <>
             <Head>
-                {parse(head.head)}
-                {parse(options.site_favicon)}
+                {parse(head.head + options.site_favicon)}
             </Head>
             <WpImage
                 alt={options.name}
