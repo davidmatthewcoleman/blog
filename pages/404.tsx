@@ -57,7 +57,7 @@ function Writer({menu, options, latestPosts, head}: {menu: any, options: any, la
                                     d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/>
                             </svg>
                             <div
-                                className={`ml-[72px] xl:ml-[96px] mr-6`}
+                                className={`ml-[72px] xl:ml-[96px] mr-6 opacity-75`}
                             >
                                 <span
                                     className={`post-link text-2xl xl:text-4xl font-sans leading-tight pointer-events-none`}
