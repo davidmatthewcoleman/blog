@@ -67,7 +67,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                                 '(max-width: 500px)': [
                                     {
                                         width: 512,
-                                        height: 512
+                                        height: 360
                                     },
                                 ],
                                 '(min-width: 501px)': [
@@ -96,7 +96,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                                 '(max-width: 500px)': [
                                     {
                                         width: 512,
-                                        height: 512
+                                        height: 360
                                     },
                                 ],
                                 '(min-width: 501px)': [
@@ -132,7 +132,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                     )
                 }
                 <div
-                    className={`relative ${single ? 'mt-64 xl:mt-96' : 'mt-32 xl:mt-48'} ml-[72px] xl:ml-[96px] my-8 mr-6 ${single ? 'xl:w-2/3' : 'xl:w-1/2'} z-20`}
+                    className={`relative ${single ? 'mt-32 xl:mt-96' : 'mt-32 xl:mt-48'} ml-[72px] xl:ml-[96px] my-8 mr-6 ${single ? 'xl:w-2/3' : 'xl:w-1/2'} z-20`}
                 >
                     <p
                         className={`italic opacity-60`}
