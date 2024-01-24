@@ -167,4 +167,9 @@ picture {
     @apply pl-2;
 }
 
+.clearfix::before {
+    content: '';
+    display: table;
+}
+
 @import "bookmarks";

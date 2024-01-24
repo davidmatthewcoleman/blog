@@ -101,7 +101,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${!toc && 'xl:sticky'} before:hidden 2xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${toc ? '!top-0' : 'xl:sticky 2xl:before:block'} before:hidden`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
@@ -276,7 +276,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${!toc && 'xl:sticky'} before:hidden 2xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${toc ? '!top-0' : 'xl:sticky 2xl:before:block'} before:hidden`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
