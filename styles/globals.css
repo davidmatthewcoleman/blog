@@ -155,4 +155,8 @@ picture {
     @apply hidden xl:block;
 }
 
+.single-post footer span[class="mx-auto md:ml-auto md:mr-0"] {
+    @apply hidden lg:inline-flex;
+}
+
 @import "bookmarks";
