@@ -3,10 +3,10 @@ import Post from '@/components/post';
 import PostNoBanner from '@/components/postNoBanner';
 import Blocks from "@/components/blocks";
 import Footer from "@/components/footer";
-import Image from "next/image";
 import Link from "next/link";
 import Tippy from '@tippyjs/react';
 import { sticky } from 'tippy.js';
+import parse, { domToReact } from "html-react-parser";
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
@@ -53,15 +53,36 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
         setTooltipVisible(false);
     };
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        });
-    };
-
     if ( JSON.stringify([`${post[0]._embedded.author[0].acf.tooltip_text}`,`${post[0]._embedded.author[0].acf.page_link.url}`]) === tooltipData ) {
         tooltipVisible = false;
+    }
+
+    useEffect(() => {
+        const SmoothScroll = require('smooth-scroll');
+        new SmoothScroll('a[href*="#"], #totop', {
+            speed: 500,
+            speedAsDuration: true,
+            offset: (anchor: any, toggle: any) => {
+                // Apply offset only for anchor tags that are not #totop
+                return toggle.getAttribute('href') !== '#' ? 16 : 0;
+            }
+        });
+    }, []);
+
+    let toc: any;
+
+    if ( post[0].toc_content.length > 0 ) {
+        const options: any = {
+            replace: ({ name, attribs, children }: { name: any, attribs: any, children: any }) => {
+                if (name) {
+                    if (name === 'a') {
+                        return <a {...attribs} className={`inline-block text-sm border-b border-b-transparent hover:border-b-bright-sun-500 transition-colors font-sans`}>{domToReact(children)}</a>;
+                    }
+                }
+            },
+        };
+
+        toc = parse(post[0].toc_content, options);
     }
 
     return (
@@ -80,7 +101,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative xl:sticky before:hidden xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative ${!toc && 'xl:sticky'} before:hidden xl:before:block`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
@@ -161,6 +182,16 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                             </ul>
                                         </div>
                                     </div>
+                                    {toc && (
+                                        <div className={`toc-card inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                            <h2
+                                                className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
+                                            >
+                                                Contents
+                                            </h2>
+                                            {toc}
+                                        </div>
+                                    )}
                                     <div className={`inline-block xl:w-4/5 xl:ml-auto`}>
                                         <h2
                                             className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
@@ -245,7 +276,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative xl:sticky before:hidden xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative ${!toc && 'xl:sticky'} before:hidden xl:before:block`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
@@ -323,6 +354,16 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                             </ul>
                                         </div>
                                     </div>
+                                    {toc && (
+                                        <div className={`toc-card inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                            <h2
+                                                className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
+                                            >
+                                                Contents
+                                            </h2>
+                                            {toc}
+                                        </div>
+                                    )}
                                     <div className={`inline-block xl:w-4/5 xl:ml-auto`}>
                                         <h2
                                             className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
@@ -399,10 +440,10 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
 
             <Footer loadMore={(
                 isVisible && (
-                    <button className={`inline-link !hidden lg:!inline-block !p-0 uppercase`} onClick={scrollToTop}>
+                    <a id={`totop`} href={`#`} className={`inline-link !hidden lg:!inline-block !p-0 uppercase`}>
                         <span className={`relative`}>Back to top</span>
                         <svg className={`relative bottom-px inline fill-black ml-0.5`} width={16} height={16} viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" /></svg>
-                    </button>
+                    </a>
                 )
             )} options={options}/>
         </section>

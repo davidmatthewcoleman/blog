@@ -55,18 +55,22 @@ body {
     @apply block text-right;
 }
 
-.author-card {
+.author-card, .toc-card {
     @apply top-8;
 }
 
-.author-card::before {
+.author-card::before, .toc-card::before {
     content: '';
     @apply absolute -top-8 -left-4 -bottom-12 -right-4;
-    background-image: linear-gradient(to bottom, theme('colors.amber.50') 0%, theme('colors.amber.50') 75%, transparent 100%);
+    background-image: linear-gradient(to bottom, theme('colors.amber.50') 0%, theme('colors.amber.50') calc(100% - 3em), transparent 100%);
 }
 
-.author-card > * {
+.author-card > *, .toc-card > * {
     @apply relative;
+}
+
+.author-card {
+    @apply z-20;
 }
 
 .tooltip-br > .tippy-content {
@@ -157,6 +161,10 @@ picture {
 
 .single-post footer span[class="mx-auto md:ml-auto md:mr-0"] {
     @apply hidden lg:inline-flex;
+}
+
+.toc-card li > ul {
+    @apply pl-2;
 }
 
 @import "bookmarks";
