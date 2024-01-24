@@ -13,6 +13,9 @@ const config: Config = {
       'serif': ['Poly', 'Georgia', 'serif'],
     },
     extend: {
+      screens: {
+        '1.5xl': '1152px',
+      },
       typography: (theme: any) => ({
         DEFAULT: {
           css: {
