@@ -222,8 +222,8 @@ function Header({menu, options, latestPosts}: {menu: any, options: any, latestPo
             </div>
             {options.site_background_credit && (
                 <div
-                    className={`absolute flex flex-col h-10 align-middle justify-center inset-0 top-auto backdrop-blur-md backdrop-brightness-50 bg-white/10 ${headerState ? 'translate-y-0' : 'translate-y-full'} transition-transform`}>
-                    <span className={`inline-block px-2 py-1 text-white text-sm text-center`}>
+                    className={`absolute hidden lg:flex flex-col h-10 align-middle justify-center inset-0 top-auto backdrop-blur-md backdrop-brightness-50 bg-white/10 ${headerState ? 'translate-y-0' : 'translate-y-full'} transition-transform`}>
+                    <span className={`inline-block px-2 py-1 text-white text-xs 2xl:text-sm text-center`}>
                        Background {options.site_background_credit}
                     </span>
                 </div>

@@ -93,7 +93,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                         <React.Fragment key={post.id}>
                             <Post key={post.id} data={post} single={true} />
                             <div
-                                className={`post-content relative w-full flex flex-col xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
+                                className={`post-content relative w-full flex flex-col 2xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
                             >
                                 <div
                                     className={`prose prose-lg prose-dropcap prose-strong:font-sans xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
@@ -101,7 +101,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative ${!toc && 'xl:sticky'} before:hidden xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${!toc && 'xl:sticky'} before:hidden 2xl:before:block`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
@@ -183,7 +183,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                         </div>
                                     </div>
                                     {toc && (
-                                        <div className={`toc-card hidden xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                        <div className={`toc-card hidden 2xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden 2xl:before:block`}>
                                             <h2
                                                 className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
                                             >
@@ -268,7 +268,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                         <React.Fragment key={post.id}>
                             <PostNoBanner key={post.id} data={post} single={true} />
                             <div
-                                className={`post-content relative w-full flex flex-col xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
+                                className={`post-content relative w-full flex flex-col 2xl:flex-row flex-grow bar-left/50 before:w-[48px] xl:before:w-[64px]`}
                             >
                                 <div
                                     className={`prose prose-lg prose-dropcap prose-strong:font-sans xl:w-2/3 max-w-full py-8 ml-[72px] xl:ml-[96px] mr-6 xl:mr-0`}
@@ -276,7 +276,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                     <Blocks data={post.blocks}/>
                                 </div>
                                 <aside className={`sidebar flex flex-col gap-12 xl:w-1/3 py-8 px-6 xl:px-10 ml-[48px] xl:ml-0`}>
-                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto relative ${!toc && 'xl:sticky'} before:hidden xl:before:block`}>
+                                    <div className={`author-card inline-block xl:w-4/5 xl:ml-auto mb-8 2xl:mb-0 relative ${!toc && 'xl:sticky'} before:hidden 2xl:before:block`}>
                                         <div>
                                             <WpImage url={post._embedded.author[0].avatar_urls[96].replace('-96x96', '')} src={{
                                                 '': [
@@ -355,7 +355,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                         </div>
                                     </div>
                                     {toc && (
-                                        <div className={`toc-card hidden xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                        <div className={`toc-card hidden 2xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden 2xl:before:block`}>
                                             <h2
                                                 className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
                                             >
