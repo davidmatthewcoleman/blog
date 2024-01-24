@@ -183,7 +183,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                         </div>
                                     </div>
                                     {toc && (
-                                        <div className={`toc-card inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                        <div className={`toc-card hidden xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
                                             <h2
                                                 className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
                                             >
@@ -355,7 +355,7 @@ function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: an
                                         </div>
                                     </div>
                                     {toc && (
-                                        <div className={`toc-card inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
+                                        <div className={`toc-card hidden xl:inline-block mt-8 xl:w-4/5 xl:ml-auto xl:sticky bg-amber-50 before:hidden xl:before:block`}>
                                             <h2
                                                 className={`flex flex-col text-sm mb-2 uppercase font-semibold font-sans`}
                                             >
