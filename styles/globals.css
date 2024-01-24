@@ -8,7 +8,7 @@ body {
     color: #5a5a4a;
 }
 
-@media screen and (min-width: 1536px) {
+@media screen and (min-width: 1536px) and (max-width: 1920px) {
     .sidebar {
         @apply mr-32;
     }
