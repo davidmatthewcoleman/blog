@@ -1,8 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Post from '@/components/post';
-import PostNoBanner from '@/components/postNoBanner';
-import Blocks from "@/components/blocks";
-import Footer from "@/components/footer";
 import Link from "next/link";
 import Tippy from '@tippyjs/react';
 import { sticky } from 'tippy.js';
@@ -10,9 +6,14 @@ import parse, { domToReact } from "html-react-parser";
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const Post = dynamic(() => import('@/components/post'), { ssr: true });
+const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
+const Blocks = dynamic(() => import('@/components/blocks'), { ssr: true });
+const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
+
+const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: any, options: any }) {
     const [isVisible, setIsVisible] = useState(false);

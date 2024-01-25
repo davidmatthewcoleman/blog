@@ -1,8 +1,10 @@
 import React from 'react';
-import Post from '@/components/post';
-import PostNoBanner from '@/components/postNoBanner';
-import Footer from "@/components/footer";
-import { useRouter } from 'next/router'; // Import useRouter for handling URL navigation
+import { useRouter } from 'next/router';
+import dynamic from "next/dynamic"; // Import useRouter for handling URL navigation
+
+const Post = dynamic(() => import('@/components/post'), { ssr: true });
+const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
+const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
 function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any, header: any, options: any, pageNumber: number }) {
     const router = useRouter(); // Initialize useRouter

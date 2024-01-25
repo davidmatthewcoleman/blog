@@ -1,8 +1,3 @@
-import { format } from 'date-fns-tz'
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from 'react';
-
 function Footer({loadMore, options}: {loadMore: any, options: any}) {
     return (
         <footer className={`relative flex flex-col md:flex-row gap-3 py-6 px-8 mt-auto text-sm uppercase tracking-wider bg-white border-t border-t-black/10 z-10 font-sans`}>

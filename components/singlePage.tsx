@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Lato } from 'next/font/google';
-import Post from '@/components/post';
-import PostNoBanner from '@/components/postNoBanner';
-import Blocks from "@/components/blocks";
-import Footer from "@/components/footer";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
+const Blocks = dynamic(() => import('@/components/blocks'), { ssr: true });
+const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
 const lato = Lato({
     subsets: ['latin'],

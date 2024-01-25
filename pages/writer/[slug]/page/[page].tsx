@@ -1,14 +1,11 @@
-import Image from 'next/image'
-
-import Header from "@/components/header";
-import PostList from "@/components/postList";
 import Head from "next/head";
 import parse from "html-react-parser";
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
 import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
+const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 function Writer({menu, options, latestPosts, allPosts, writer, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any, pageNumber: number, head: any}) {
     return (

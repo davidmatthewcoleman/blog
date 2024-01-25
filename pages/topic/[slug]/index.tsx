@@ -1,15 +1,12 @@
-import React from "react";
-import Image from 'next/image'
-
-import Link from "next/link";
-import Header from "@/components/header";
-import PostList from "@/components/postList";
 import Head from "next/head";
 import parse from "html-react-parser";
-import WPAdminBar from "@/components/WPAdminBar";
+import React from "react";
 import dynamic from 'next/dynamic';
+import Link from "next/link";
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
+const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, head}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, head: any}) {
     // console.log('Breadcrumb: ' + JSON.stringify(breadcrumb));

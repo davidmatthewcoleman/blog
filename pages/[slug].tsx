@@ -1,14 +1,11 @@
-import Image from 'next/image'
-
-import Header from "@/components/header";
-import SinglePost from "@/components/singlePost";
-import SinglePage from "@/components/singlePage";
 import Head from "next/head";
-
-import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import React from "react";
-import WPAdminBar from "@/components/WPAdminBar";
+import dynamic from "next/dynamic";
+
+const SinglePost = dynamic(() => import('@/components/singlePost'), { ssr: true });
+const SinglePage = dynamic(() => import('@/components/singlePage'), { ssr: true });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {

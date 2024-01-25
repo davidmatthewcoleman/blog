@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import parse from "html-react-parser";
-import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 function Header({menu, options, latestPosts}: {menu: any, options: any, latestPosts: any}) {
     const [headerState, setHeader] = useState(false);
