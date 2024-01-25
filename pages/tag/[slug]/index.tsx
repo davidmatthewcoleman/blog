@@ -5,8 +5,7 @@ import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Tag({menu, options, latestPosts, allPosts, tag, head}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, head: any}) {
     return (
         <>
@@ -89,7 +88,7 @@ export async function getStaticProps({ params }: any) {
             tag,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

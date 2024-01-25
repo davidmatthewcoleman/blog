@@ -1,19 +1,5 @@
-import {Lato, Poly} from 'next/font/google'
 import {format} from "date-fns-tz";
 import Link from "next/link";
-
-const lato = Lato({
-    subsets: ['latin'],
-    fallback: ['sans-serif'],
-    weight: ['100', '300', '400', '700', '900']
-} );
-
-const poly = Poly({
-    subsets: ['latin'],
-    style: ['normal', 'italic'],
-    fallback: ['Georgia', 'serif'],
-    weight: ['400']
-} );
 
 function PostNoBanner({data, single}: {data: any, single: boolean}) {
 

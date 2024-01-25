@@ -5,8 +5,7 @@ import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number, head: any }) {
     let transformedData: any = [];
 
@@ -72,7 +71,6 @@ export async function getServerSideProps(context: any) {
     // Extracting query parameters
     const { query, page = '1' } = context.query;
     const pageNumber = parseInt(page, 10) || 1;
-    const postsPerPage = 8; // Define the number of posts per page
 
     // Fetching menu, options, and latest posts
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);

@@ -1,23 +1,10 @@
 import React, { useEffect } from 'react';
 import { format } from 'date-fns-tz';
-import { Lato, Poly } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
-const lato = Lato({
-    subsets: ['latin'],
-    fallback: ['sans-serif'],
-    weight: ['100', '300', '400', '700', '900'],
-});
-
-const poly = Poly({
-    subsets: ['latin'],
-    style: ['normal', 'italic'],
-    fallback: ['Georgia', 'serif'],
-    weight: ['400'],
-});
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 
 interface PostProps {
     data: any;
@@ -39,7 +26,7 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
         return () => {
             router.events.off('beforeHistoryChange', handleRouteChange);
         };
-    }, []);
+    }, [router.events]);
 
     const hasFeaturedMedia =
         data.featured_media && data.featured_media.src && data.featured_media.fp;

@@ -3,8 +3,7 @@ import parse from "html-react-parser";
 import React from "react";
 import dynamic from 'next/dynamic';
 
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 
 function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options: any, latestPosts: any, allPosts: any, head: any}) {
@@ -64,7 +63,7 @@ export async function getStaticProps() {
             allPosts,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

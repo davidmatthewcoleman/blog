@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import Tippy from '@tippyjs/react';
 import { sticky } from 'tippy.js';
@@ -13,8 +13,7 @@ const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: t
 const Blocks = dynamic(() => import('@/components/blocks'), { ssr: true });
 const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: any, options: any }) {
     const [isVisible, setIsVisible] = useState(false);
     let [tooltipVisible, setTooltipVisible] = useState(true);

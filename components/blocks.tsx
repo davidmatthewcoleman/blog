@@ -3,9 +3,9 @@ import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import dynamic from 'next/dynamic';
 
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Blocks({ data }: { data: any }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
@@ -20,7 +20,6 @@ function Blocks({ data }: { data: any }) {
             {
                 data &&
                 data.map((block: any, i: number) => {
-                    i = i + 8;
                     if (block.blockName === 'core/image') {
                         let blockClass, blockImgClass, blockWidth;
                         switch (block.attrs.align) {
@@ -33,6 +32,7 @@ function Blocks({ data }: { data: any }) {
                                 blockClass = 'float-none !my-2 w-full md:w-auto';
                                 blockImgClass = '!m-0 w-full';
                                 blockWidth = block.attrs.width ? block.attrs.width : 1200;
+                                break;
                             case 'wide':
                                 blockClass = 'float-none !my-2 max-w-5xl mx-auto md:w-auto';
                                 blockImgClass = '!m-0 w-full';

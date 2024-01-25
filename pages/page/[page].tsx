@@ -6,11 +6,8 @@ import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Home({menu, options, latestPosts, allPosts, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, pageNumber: any, head: any}) {
-    const router = useRouter();
-
     return (
         <>
             <Head>
@@ -90,7 +87,7 @@ export async function getStaticProps({ params }: any) {
             pageNumber,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

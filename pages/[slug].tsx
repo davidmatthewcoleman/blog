@@ -6,8 +6,7 @@ import dynamic from "next/dynamic";
 const SinglePost = dynamic(() => import('@/components/singlePost'), { ssr: true });
 const SinglePage = dynamic(() => import('@/components/singlePage'), { ssr: true });
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
     console.log('Head: ', head);
 
@@ -95,7 +94,7 @@ export async function getStaticProps({ params }: any) {
                 latestPostsAside,
                 head
             },
-            revalidate: 300,
+            revalidate: 3600,
         };
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -106,7 +105,7 @@ export async function getStaticProps({ params }: any) {
                 latestPosts: null,
                 allPosts: null
             },
-            revalidate: 300,
+            revalidate: 3600,
         };
     }
 }

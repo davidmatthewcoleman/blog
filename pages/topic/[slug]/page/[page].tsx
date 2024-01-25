@@ -6,9 +6,8 @@ import Link from "next/link";
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
-function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, pageNumber: number, head: any}) {
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, breadcrumb: any, pageNumber: number, head: any}) {
     return (
         <>
             <Head>
@@ -99,7 +98,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: any) {
-    const { slug, page } = params;
+    const { page } = params;
     const pageNumber = parseInt(page, 10);
 
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
@@ -131,7 +130,7 @@ export async function getStaticProps({ params }: any) {
             pageNumber,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

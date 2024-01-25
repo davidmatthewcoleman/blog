@@ -6,9 +6,8 @@ import Link from "next/link";
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
-function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, head}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, head: any}) {
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+function Topic({menu, options, latestPosts, allPosts, breadcrumb, head}: {menu: any, options: any, latestPosts: any, allPosts: any, breadcrumb: any, head: any}) {
     // console.log('Breadcrumb: ' + JSON.stringify(breadcrumb));
 
     return (
@@ -111,7 +110,7 @@ export async function getStaticProps({ params }: any) {
             breadcrumb,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

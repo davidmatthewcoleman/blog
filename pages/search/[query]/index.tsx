@@ -5,8 +5,7 @@ import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, head: any, query: string }) {
     let transformedData: any = [];
 

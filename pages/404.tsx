@@ -4,8 +4,7 @@ import React from "react";
 import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
 function Writer({menu, options, latestPosts, head}: {menu: any, options: any, latestPosts: any, head: any}) {
     return (
@@ -75,7 +74,7 @@ function Writer({menu, options, latestPosts, head}: {menu: any, options: any, la
     )
 }
 
-export async function getStaticProps({params}: any) {
+export async function getStaticProps() {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
@@ -95,7 +94,7 @@ export async function getStaticProps({params}: any) {
             latestPosts,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 

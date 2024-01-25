@@ -5,8 +5,7 @@ import dynamic from 'next/dynamic';
 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = React.lazy(() => import('@/components/WpImage'));
-
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Writer({menu, options, latestPosts, allPosts, writer, head}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any, head: any}) {
     return (
         <>
@@ -86,7 +85,7 @@ export async function getStaticProps({ params }: any) {
             writer,
             head
         },
-        revalidate: 300,
+        revalidate: 3600,
     };
 }
 
