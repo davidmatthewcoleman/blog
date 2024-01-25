@@ -1,25 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from "next/dynamic";
 
-// Function to create a placeholder with a dynamic className
-const createPlaceholder = (src: any, className: any) => {
-    const Placeholder = () => (
-        <div className={className} style={{ width: (Object.values(src).pop() as any)[0].width, height: (Object.values(src).pop() as any)[0].height }}></div>
-    );
-    Placeholder.displayName = 'Placeholder'; // Set displayName for the Placeholder component
-    return Placeholder;
-};
+const Placeholder = ({ src, className }: { src: any; className: string }) => (
+    <div className={className} style={{ width: (Object.values(src).pop() as any)[0].width, height: (Object.values(src).pop() as any)[0].height }}></div>
+);
 
 const WpImage = ({ url, src, className, alt, focalPoint, props }: { url: string, src: any, className: string, alt: string, focalPoint: any, props: any }) => {
-    // Dynamically import GetImage with a className-aware placeholder
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    // Dynamically import GetImage
     const GetImage = dynamic(() => import('@/components/getImage'), {
         ssr: true,
-        loading: createPlaceholder(src, className),
+        loading: () => <Placeholder src={src} className={className} />,
     });
 
-    GetImage.displayName = 'GetImage';
+    useEffect(() => {
+        // Assuming GetImage loads instantly which might not be the case,
+        // you may need a more reliable way to know when GetImage has finished loading
+        setIsLoaded(true);
+    }, []);
 
-    return <GetImage url={url} src={src} className={className} alt={alt} focalPoint={focalPoint} {...props} />;
+    return isLoaded
+        ? <GetImage url={url} src={src} className={className} alt={alt} focalPoint={focalPoint} {...props} />
+        : <Placeholder src={src} className={className} />;
 }
 
 export default WpImage;
