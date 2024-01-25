@@ -10,7 +10,7 @@ const WpImage = ({ url, src, className, alt, focalPoint, props }: { url: string,
 
     // Dynamically import GetImage
     const GetImage = dynamic(() => import('@/components/getImage'), {
-        ssr: false,
+        ssr: true,
         loading: () => <Placeholder src={src} className={className} />,
     });
 

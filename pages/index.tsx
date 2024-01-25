@@ -3,8 +3,8 @@ import parse from "html-react-parser";
 import React from "react";
 import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });const Header = dynamic(() => import('@/components/header'), { ssr: false });
-const PostList = dynamic(() => import('@/components/postList'), { ssr: false });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 
 function Home({menu, options, latestPosts, allPosts, totalPages, head}: {menu: any, options: any, latestPosts: any, allPosts: any, totalPages: number, head: any}) {
   return (

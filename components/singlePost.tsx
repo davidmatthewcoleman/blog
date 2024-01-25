@@ -8,12 +8,12 @@ import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
 import dynamic from "next/dynamic";
 
-const Post = dynamic(() => import('@/components/post'), { ssr: false });
-const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: false });
-const Blocks = dynamic(() => import('@/components/blocks'), { ssr: false });
-const Footer = dynamic(() => import('@/components/footer'), { ssr: false });
+const Post = dynamic(() => import('@/components/post'), { ssr: true });
+const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
+const Blocks = dynamic(() => import('@/components/blocks'), { ssr: true });
+const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: any, options: any }) {
     const [isVisible, setIsVisible] = useState(false);
     let [tooltipVisible, setTooltipVisible] = useState(true);

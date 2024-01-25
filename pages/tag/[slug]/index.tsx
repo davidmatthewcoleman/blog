@@ -3,9 +3,9 @@ import parse from "html-react-parser";
 import React from "react";
 import dynamic from 'next/dynamic';
 
-const Header = dynamic(() => import('@/components/header'), { ssr: false });
-const PostList = dynamic(() => import('@/components/postList'), { ssr: false });
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Tag({menu, options, latestPosts, allPosts, totalPages, tag, head}: {menu: any, options: any, latestPosts: any, allPosts: any, totalPages: number, tag: any, head: any}) {
     return (
         <>

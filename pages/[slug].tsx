@@ -3,10 +3,10 @@ import parse from 'html-react-parser';
 import React from "react";
 import dynamic from "next/dynamic";
 
-const SinglePost = dynamic(() => import('@/components/singlePost'), { ssr: false });
-const SinglePage = dynamic(() => import('@/components/singlePage'), { ssr: false });
-const Header = dynamic(() => import('@/components/header'), { ssr: false });
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
+const SinglePost = dynamic(() => import('@/components/singlePost'), { ssr: true });
+const SinglePage = dynamic(() => import('@/components/singlePage'), { ssr: true });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
     return (
         <>

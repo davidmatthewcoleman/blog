@@ -4,9 +4,9 @@ import React from "react";
 import dynamic from 'next/dynamic';
 import Link from "next/link";
 
-const Header = dynamic(() => import('@/components/header'), { ssr: false });
-const PostList = dynamic(() => import('@/components/postList'), { ssr: false });
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, totalPages, head}: {menu: any, options: any, latestPosts: any, allPosts: any, breadcrumb: any, pageNumber: number, totalPages: number, head: any}) {
     return (
         <>

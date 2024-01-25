@@ -3,8 +3,8 @@ import parse from "html-react-parser";
 import React from "react";
 import dynamic from 'next/dynamic';
 
-const Header = dynamic(() => import('@/components/header'), { ssr: false });
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });const Footer = dynamic(() => import('@/components/footer'), { ssr: false });
+const Header = dynamic(() => import('@/components/header'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
 function Writer({menu, options, latestPosts, head}: {menu: any, options: any, latestPosts: any, head: any}) {
     return (
