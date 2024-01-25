@@ -9,7 +9,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
-import WpImage from '@/components/wpImage';
+const WpImage = React.lazy(() => import('@/components/WpImage'));
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
     console.log('Head: ', head);

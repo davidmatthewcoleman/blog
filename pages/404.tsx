@@ -11,7 +11,9 @@ import PostNoBanner from "@/components/postNoBanner";
 import Footer from "@/components/footer";
 import {format} from "date-fns-tz";
 import Link from "next/link";
-import WpImage from '@/components/wpImage';
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 
 function Writer({menu, options, latestPosts, head}: {menu: any, options: any, latestPosts: any, head: any}) {
     return (

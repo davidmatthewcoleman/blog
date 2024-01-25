@@ -3,7 +3,9 @@ import { format } from 'date-fns-tz';
 import { Lato, Poly } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import WpImage from '@/components/wpImage';
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 
 const lato = Lato({
     subsets: ['latin'],

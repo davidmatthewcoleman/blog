@@ -5,7 +5,9 @@ import parse from "html-react-parser";
 import React from "react";
 import { useRouter } from 'next/router';
 import WPAdminBar from "@/components/WPAdminBar";
-import WpImage from '@/components/wpImage';
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 
 function Home({menu, options, latestPosts, allPosts, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, pageNumber: any, head: any}) {
     const router = useRouter();

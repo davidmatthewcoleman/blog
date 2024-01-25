@@ -4,7 +4,9 @@ import PostList from "@/components/postList";
 import parse from "html-react-parser";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
-import WpImage from '@/components/wpImage';
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 
 function Home({menu, options, latestPosts, allPosts, head}: {menu: any, options: any, latestPosts: any, allPosts: any, head: any}) {
   return (
