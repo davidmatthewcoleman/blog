@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
-function Writer({menu, options, latestPosts, allPosts, writer, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any, pageNumber: number, head: any}) {
+function Writer({menu, options, latestPosts, allPosts, writer, pageNumber, totalPages, head}: {menu: any, options: any, latestPosts: any, allPosts: any, writer: any, pageNumber: number, totalPages: number, head: any}) {
     return (
         <>
             <Head>
@@ -41,6 +41,7 @@ function Writer({menu, options, latestPosts, allPosts, writer, pageNumber, head}
                     </div>
                 )}
               pageNumber={pageNumber}
+              totalPages={totalPages}
               options={options}/>
             </main>
         </>
@@ -48,7 +49,7 @@ function Writer({menu, options, latestPosts, allPosts, writer, pageNumber, head}
 }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?per_page=9999`);
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users`);
     const authors = await res.json();
 
     const paths = [];
@@ -59,7 +60,7 @@ export async function getStaticPaths() {
         }
 
         // Fetch the total number of posts for the topic
-        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[author_name]=${author.slug}`);
+        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?filter[author_name]=${author.slug}`);
         const posts = await resPosts.json();
         const totalPagesPerTopic = Math.ceil(posts.length / 8);
 
@@ -79,6 +80,13 @@ export async function getStaticPaths() {
     };
 }
 
+const fetchPosts = async (url: string) => {
+    const response = await fetch(url) as any;
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages'), 10);
+    const posts = await response.json();
+    return { posts, totalPages };
+};
+
 export async function getStaticProps({ params }: any) {
     const { page } = params;
     const pageNumber = parseInt(page, 10);
@@ -87,13 +95,16 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, writer] = await Promise.all([
+    const [menu, options, latestPosts, allPostsData, writer] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[author_name]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`).then(res => res.json())
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=8&page=${pageNumber}&filter[author_name]=${params.slug}`).then(res => res.json()),
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`)
     ]);
+
+    const allPosts = allPostsData.posts;
+    const totalPages = allPostsData.totalPages;
 
     const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/writer/${params.slug}/page/${pageNumber}/`)}`).then(res => res.json());
 
@@ -105,6 +116,7 @@ export async function getStaticProps({ params }: any) {
             allPosts,
             writer,
             pageNumber,
+            totalPages,
             head
         },
         revalidate: 3600,

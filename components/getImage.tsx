@@ -30,19 +30,13 @@ const GetImage = ({ url, src, className, alt, focalPoint, props }: { url: string
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     setLoaded(true);
+                    observer.unobserve(imgRef.current);
                 }
-                // Unobserve the image regardless of its state to avoid future triggers
-                observer.unobserve(imgRef.current);
             });
-        }, { threshold: 0.01 }); // Adjust the threshold as needed
+        });
 
         if (imgRef.current) {
             observer.observe(imgRef.current);
-        }
-
-        // Set the image as loaded if it's already in the viewport at the time of mounting
-        if (imgRef.current && imgRef.current.getBoundingClientRect().top < window.innerHeight) {
-            setLoaded(true);
         }
 
         return () => {

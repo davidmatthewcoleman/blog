@@ -7,7 +7,7 @@ import Link from "next/link";
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
-function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, breadcrumb: any, pageNumber: number, head: any}) {
+function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, totalPages, head}: {menu: any, options: any, latestPosts: any, allPosts: any, breadcrumb: any, pageNumber: number, totalPages: number, head: any}) {
     return (
         <>
             <Head>
@@ -58,6 +58,7 @@ function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, he
                     </div>
                 )}
                 pageNumber={pageNumber}
+                totalPages={totalPages}
                 options={options}
                 />
             </main>
@@ -66,7 +67,7 @@ function Topic({menu, options, latestPosts, allPosts, breadcrumb, pageNumber, he
 }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999`);
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories`);
     const topics = await res.json();
 
     const paths = [];
@@ -77,7 +78,7 @@ export async function getStaticPaths() {
         }
 
         // Fetch the total number of posts for the topic
-        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${topic.slug}`);
+        const resPosts = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?filter[taxonomy]=category&filter[term]=${topic.slug}`);
         const posts = await resPosts.json();
         const totalPagesPerTopic = Math.ceil(posts.length / 8);
 
@@ -97,6 +98,13 @@ export async function getStaticPaths() {
     };
 }
 
+const fetchPosts = async (url: string) => {
+    const response = await fetch(url) as any;
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages'), 10);
+    const posts = await response.json();
+    return { posts, totalPages };
+}
+
 export async function getStaticProps({ params }: any) {
     const { page } = params;
     const pageNumber = parseInt(page, 10);
@@ -105,17 +113,20 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, topic] = await Promise.all([
+    const [menu, options, latestPosts, allPostsData, topic] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=category&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?per_page=9999&slug=${params.slug}&_embed`).then(res => res.json())
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=8&page=${pageNumber}&filter[taxonomy]=category&filter[term]=${params.slug}`),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/categories?slug=${params.slug}&_embed`).then(res => res.json())
     ]);
 
     const [breadcrumb] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/term/category/${topic[0].id}`).then(res => res.json()),
     ]);
+
+    const allPosts = allPostsData.posts;
+    const totalPages = allPostsData.totalPages;
 
     const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/topic/${params.slug}/page/${pageNumber}/`)}`).then(res => res.json());
 
@@ -128,6 +139,7 @@ export async function getStaticProps({ params }: any) {
             topic,
             breadcrumb,
             pageNumber,
+            totalPages,
             head
         },
         revalidate: 3600,

@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
-function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number, head: any }) {
+function Search({ menu, options, latestPosts, allPosts, query, pageNumber, totalPages, head }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number, totalPages: number, head: any }) {
     let transformedData: any = [];
 
     allPosts.map((post: any) => {
@@ -61,10 +61,18 @@ function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head 
                 )}
                 options={options}
                 pageNumber={pageNumber}
+                totalPages={totalPages}
                 />
             </main>
         </>
     );
+}
+
+const fetchPosts = async (url: string) => {
+    const response = await fetch(url) as any;
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages'), 10);
+    const posts = await response.json();
+    return { posts, totalPages };
 }
 
 export async function getServerSideProps(context: any) {
@@ -72,24 +80,22 @@ export async function getServerSideProps(context: any) {
     const { query, page = '1' } = context.query;
     const pageNumber = parseInt(page, 10) || 1;
 
-    // Fetching menu, options, and latest posts
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
-    const menuPromise = fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json());
-    const optionsPromise = fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json());
-    const latestPostsPromise = fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json());
+    // Fetch Stuff
+    const [menu, options, latestPosts, allPostsData] = await Promise.all([
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
+        // Fetch posts based on the search query
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=8&page=1&search=${query}&_embed`)
+    ]);
 
-    const [menu, options, latestPosts] = await Promise.all([menuPromise, optionsPromise, latestPostsPromise]);
+    const allPosts = allPostsData.posts;
+    const totalPages = allPostsData.totalPages;
 
-    // Fetching posts based on search query and pagination
-    const postsUrl = `${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=9999&search=${query}&_embed`;
-    const resPosts = await fetch(postsUrl);
-    const allPosts = await resPosts.json();
-
-    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/search/${query}/page/${pageNumber}/`)}`).then(res => res.json());
-
-    // console.log(pageNumber);
+    const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/search/${query}/`)}`).then(res => res.json());
 
     return {
         props: {
@@ -99,6 +105,7 @@ export async function getServerSideProps(context: any) {
             allPosts,
             query,
             pageNumber,
+            totalPages,
             head
         },
     };

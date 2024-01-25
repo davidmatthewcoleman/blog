@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
-function Tag({menu, options, latestPosts, allPosts, tag, head}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, head: any}) {
+function Tag({menu, options, latestPosts, allPosts, totalPages, tag, head}: {menu: any, options: any, latestPosts: any, allPosts: any, totalPages: number, tag: any, head: any}) {
     return (
         <>
             <Head>
@@ -41,6 +41,7 @@ function Tag({menu, options, latestPosts, allPosts, tag, head}: {menu: any, opti
                     </div>
                 )}
                 pageNumber={1}
+                totalPages={totalPages}
                 options={options}
                 />
             </main>
@@ -48,15 +49,20 @@ function Tag({menu, options, latestPosts, allPosts, tag, head}: {menu: any, opti
     )
 }
 
+const fetchPosts = async (url: string) => {
+    const response = await fetch(url) as any;
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages'), 10);
+    const posts = await response.json();
+    return { posts, totalPages };
+}
+
 export async function getStaticPaths() {
-    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999`);
+    const res = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags`);
     const tags = await res.json();
 
     const paths = tags.map((tag: any) => ({
         params: { slug: tag.slug },
     }));
-
-    // console.log(paths);
 
     return {
         paths,
@@ -69,13 +75,16 @@ export async function getStaticProps({ params }: any) {
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts, tag] = await Promise.all([
+    const [menu, options, latestPosts, allPostsData, tag] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&page=1filter[taxonomy]=post_tag&filter[term]=${params.slug}`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=8&page=1&filter[taxonomy]=post_tag&filter[term]=${params.slug}`),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?slug=${params.slug}`).then(res => res.json())
     ]);
+
+    const allPosts = allPostsData.posts;
+    const totalPages = allPostsData.totalPages;
 
     const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/tag/${params.slug}/`)}`).then(res => res.json());
 
@@ -85,6 +94,7 @@ export async function getStaticProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
+            totalPages,
             tag,
             head
         },

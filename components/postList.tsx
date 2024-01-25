@@ -1,12 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import dynamic from "next/dynamic"; // Import useRouter for handling URL navigation
+import dynamic from "next/dynamic";
+import {NEXT_URL} from "next/dist/client/components/app-router-headers"; // Import useRouter for handling URL navigation
 
 const Post = dynamic(() => import('@/components/post'), { ssr: true });
 const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
 const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
 
-function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any, header: any, options: any, pageNumber: number }) {
+function PostList({ allPosts, header, options, pageNumber = 1, totalPages }: { allPosts: any, header: any, options: any, pageNumber: number, totalPages: number }) {
     const router = useRouter(); // Initialize useRouter
     const { asPath } = router;
     let nextPageUrl: any, prevPageUrl: any;
@@ -52,35 +53,16 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
         prevPageUrl = createPageUrl('', pageNumber - 1);
     }
 
+    nextPageUrl = nextPageUrl.replace('//', '/');
+    prevPageUrl = prevPageUrl.replace('//', '/');
+
 
     const currentPage = pageNumber ? pageNumber : 1;
-    const postsPerPage = 8;
-
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(allPosts.length / postsPerPage);
-
-    const nextPage = () => {
-        const nextPageNumber = currentPage + 1;
-        router.push(nextPageUrl);
-    };
-
-    const prevPage = () => {
-        if (currentPage > 1) {
-            const prevPageNumber = currentPage - 1;
-            router.push(prevPageUrl);
-        }
-    };
-
-    const startIndex = (currentPage - 1) * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    const displayedPosts = sortedPosts.slice(startIndex, endIndex);
-
-    // console.log(currentPage);
 
     return (
         <section id={`content`} className={`post-list relative flex flex-col w-full bg-amber-50 bar-left/50 before:w-[48px] xl:before:w-[64px]`}>
             {header}
-            {displayedPosts.map((post: any) => {
+            {allPosts.map((post: any) => {
                 if (post.featured_media !== false) {
                     return <Post key={post.id} data={post} single={false} />;
                 } else {
@@ -91,18 +73,18 @@ function PostList({ allPosts, header, options, pageNumber = 1 }: { allPosts: any
                 <>
                     {/* Newer Entries button */}
                     {currentPage > 1 && (
-                        <button className={`inline-link inline-block !p-0 uppercase`} onClick={prevPage}>
+                        <a href={prevPageUrl} className={`inline-link inline-block !p-0 uppercase`}>
                             Newer Entries
-                        </button>
+                        </a>
                     )}
                     {(currentPage > 1 && currentPage < totalPages) && (
                         <span className={`inline-link inline-block !p-0 mx-2 opacity-25`}>/</span>
                     )}
                     {/* Older Entries button */}
                     {currentPage < totalPages && (
-                        <button className={`inline-link inline-block !p-0 uppercase`} onClick={nextPage}>
+                        <a href={nextPageUrl} className={`inline-link inline-block !p-0 uppercase`}>
                             Older Entries
-                        </button>
+                        </a>
                     )}
                 </>
             )} options={options} />

@@ -2,7 +2,6 @@ import {format} from "date-fns-tz";
 import Link from "next/link";
 
 function PostNoBanner({data, single}: {data: any, single: boolean}) {
-
     return (
         <section
             className={`relative post flex flex-col [&>hr]:first-of-type:hidden [&_header]:first-of-type:mt-24 bar-left/50 before:w-[48px] xl:before:w-[64px] bg-amber-50 z-10`}

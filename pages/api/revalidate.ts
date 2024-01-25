@@ -28,9 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await Promise.all(revalidatePaths);
 
-        // Logging for debugging purposes only
-        console.log(`${new Date().toJSON()} - Paths revalidated: ${correctPaths.join(', ')}`)
-
         return res.json({
             revalidated: true,
             message: `Paths revalidated: ${correctPaths.join(', ')}`

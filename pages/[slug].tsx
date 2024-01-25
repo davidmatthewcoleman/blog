@@ -8,8 +8,6 @@ const SinglePage = dynamic(() => import('@/components/singlePage'), { ssr: true 
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
-    console.log('Head: ', head);
-
     return (
         <>
             <Head>
@@ -50,8 +48,8 @@ export default function PostPage({menu, options, latestPosts, currentPost, lates
 
 export async function getStaticPaths() {
     const [posts, pages] = await Promise.all([
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/pages?per_page=9999`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/pages`).then(res => res.json()),
     ]);
 
     const allPosts = [...posts, ...pages];

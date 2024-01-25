@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { format } from 'date-fns-tz';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,29 +11,15 @@ interface PostProps {
     single: boolean;
 }
 
-const Post: React.FC<PostProps> = ({ data, single }) => {
-    const router = useRouter();
-
-    useEffect(() => {
-        const handleRouteChange = (url: string) => {
-            if (url === window.location.pathname) {
-                sessionStorage.setItem('scrollPosition', window.pageYOffset.toString());
-            }
-        };
-
-        router.events.on('beforeHistoryChange', handleRouteChange);
-
-        return () => {
-            router.events.off('beforeHistoryChange', handleRouteChange);
-        };
-    }, [router.events]);
-
+const Post = ({data, single}: {data: any, single: boolean}) => {
     const hasFeaturedMedia =
         data.featured_media && data.featured_media.src && data.featured_media.fp;
 
     const backgroundColor = hasFeaturedMedia
         ? data.featured_media.color
         : 'transparent';
+
+    ('color: ', backgroundColor);
 
     return (
         <section

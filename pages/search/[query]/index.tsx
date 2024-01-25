@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 const Header = dynamic(() => import('@/components/header'), { ssr: true });
 const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
 const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
-function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, head: any, query: string }) {
+function Search({ menu, options, latestPosts, allPosts, totalPages, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, totalPages: number, head: any, query: string }) {
     let transformedData: any = [];
 
     allPosts.map((post: any) => {
@@ -60,6 +60,7 @@ function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: a
                     </div>
                 )}
                 pageNumber={1}
+                totalPages={totalPages}
                 options={options}
                 />
             </main>
@@ -67,18 +68,28 @@ function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: a
     );
 }
 
+const fetchPosts = async (url: string) => {
+    const response = await fetch(url) as any;
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages'), 10);
+    const posts = await response.json();
+    return { posts, totalPages };
+}
+
 export async function getServerSideProps({ params }: any) {
     const resMenuIDs = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/`);
     const menus = await resMenuIDs.json();
 
     // Fetch Stuff
-    const [menu, options, latestPosts, allPosts] = await Promise.all([
+    const [menu, options, latestPosts, allPostsData] = await Promise.all([
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
         // Fetch posts based on the search query
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=9999&search=${params.query}&_embed`).then(res => res.json())
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/search?per_page=8&page=1&search=${params.query}&_embed`)
     ]);
+
+    const allPosts = allPostsData.posts;
+    const totalPages = allPostsData.totalPages;
 
     const head = await fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/head/${encodeURIComponent(`${process.env.WORDPRESS_HOST}/search/${params.query}/`)}`).then(res => res.json());
 
@@ -88,6 +99,7 @@ export async function getServerSideProps({ params }: any) {
             options,
             latestPosts,
             allPosts,
+            totalPages,
             head,
             query: params.query, // Pass the query parameter to the component
         },
