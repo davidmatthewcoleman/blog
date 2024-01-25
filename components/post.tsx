@@ -19,8 +19,6 @@ const Post = ({data, single}: {data: any, single: boolean}) => {
         ? data.featured_media.color
         : 'transparent';
 
-    ('color: ', backgroundColor);
-
     return (
         <section
             className={`relative post flex flex-col bg-amber-50 z-10`}
