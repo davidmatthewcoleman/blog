@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { format } from 'date-fns-tz';
 import { Lato, Poly } from 'next/font/google';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
