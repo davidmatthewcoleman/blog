@@ -65,13 +65,13 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                             className={`absolute inset-0 w-full h-full object-cover`}
                             focalPoint={[data.featured_media.fp.x,data.featured_media.fp.y]}
                             src={{
-                                '(max-width: 500px)': [
+                                '(max-width: 512px)': [
                                     {
                                         width: 512,
                                         height: 360
                                     },
                                 ],
-                                '(min-width: 501px)': [
+                                '(min-width: 513px)': [
                                     {
                                         width: 1590,
                                         height: 512
@@ -94,16 +94,16 @@ const Post: React.FC<PostProps> = ({ data, single }) => {
                             className={`absolute inset-0 w-full h-full object-cover`}
                             focalPoint={[data.featured_media.fp.x,data.featured_media.fp.y]}
                             src={{
-                                '(max-width: 500px)': [
+                                '(max-width: 512px)': [
                                     {
                                         width: 512,
                                         height: 360
                                     },
                                 ],
-                                '(min-width: 501px)': [
+                                '(min-width: 513px)': [
                                     {
                                         width: 1590,
-                                        height: 300
+                                        height: 512
                                     },
                                 ],
                             }}
