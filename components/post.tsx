@@ -4,7 +4,9 @@ import { Lato, Poly } from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import WpImage from "@/components/wpImage";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 const lato = Lato({
     subsets: ['latin'],

@@ -10,7 +10,9 @@ import parse, { domToReact } from "html-react-parser";
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
-import WpImage from "@/components/wpImage";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 function SinglePost({ post, latestPosts, options }: { post: any, latestPosts: any, options: any }) {
     const [isVisible, setIsVisible] = useState(false);

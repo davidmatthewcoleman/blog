@@ -4,7 +4,6 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import parse from "html-react-parser";
-import WpImage from "@/components/wpImage";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
 import Post from "@/components/post";
@@ -12,6 +11,9 @@ import PostNoBanner from "@/components/postNoBanner";
 import Footer from "@/components/footer";
 import {format} from "date-fns-tz";
 import Link from "next/link";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 function Writer({menu, options, latestPosts, head}: {menu: any, options: any, latestPosts: any, head: any}) {
     return (

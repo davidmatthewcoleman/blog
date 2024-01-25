@@ -7,9 +7,11 @@ import Head from "next/head";
 
 import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
-import WpImage from "@/components/wpImage";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 export default function PostPage({menu, options, latestPosts, currentPost, latestPostsAside, head}: {menu: any, options: any, latestPosts: any, currentPost: any, latestPostsAside: any, head: any}) {
     console.log('Head: ', head);

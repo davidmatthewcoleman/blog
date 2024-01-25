@@ -6,8 +6,10 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import parse from "html-react-parser";
-import WpImage from "@/components/wpImage";
 import WPAdminBar from "@/components/WPAdminBar";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 function Topic({menu, options, latestPosts, allPosts, topic, breadcrumb, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, topic: any, breadcrumb: any, pageNumber: number, head: any}) {
     return (

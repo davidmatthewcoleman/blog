@@ -4,9 +4,11 @@ import Header from "@/components/header";
 import PostList from "@/components/postList";
 import Head from "next/head";
 import parse from "html-react-parser";
-import WpImage from "@/components/wpImage";
 import React from "react";
 import WPAdminBar from "@/components/WPAdminBar";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 function Tag({menu, options, latestPosts, allPosts, tag, pageNumber, head}: {menu: any, options: any, latestPosts: any, allPosts: any, tag: any, pageNumber: any, head: any}) {
     return (

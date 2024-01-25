@@ -5,8 +5,10 @@ import PostList from "@/components/postList";
 import {any} from "prop-types";
 import parse from "html-react-parser";
 import Head from "next/head";
-import WpImage from "@/components/wpImage";
 import React from "react";
+import dynamic from 'next/dynamic';
+
+const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
 
 function Search({ menu, options, latestPosts, allPosts, query, pageNumber, head }: { menu: any, options: any, latestPosts: any, allPosts: any, query: string, pageNumber: number, head: any }) {
     let transformedData: any = [];

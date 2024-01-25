@@ -1,64 +1,118 @@
 import React from "react";
-import Imgix, { Picture, Source } from "react-imgix";
+import ImgixClient from '@imgix/js-core';
 
 const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, src: any, className: string, alt: string, focalPoint: any, props: any}) => {
-    url = url.replace(`${process.env.WORDPRESS_HOST}/wp-content/uploads/`, `${process.env.IMGIX_HOST}/`);
+    const client = new ImgixClient({
+        domain: process.env.IMGIX_HOST as string,
+        secureURLToken: process.env.IMGIX_TOKEN as string,
+        includeLibraryParam: false
+    });
+
+    const path = url.replace(`${process.env.WORDPRESS_HOST}/wp-content/uploads/`, '');
+
     const [focalPointX, focalPointY] = focalPoint.map((value: any) => parseFloat((value / 100).toFixed(2)));
+    const dpr: any = [1,2,3];
+    const quality: any = {
+        1: 95,
+        2: 90,
+        3: 85
+    }
+
+    let arraysOnly: any = Object.values(src).filter(value => Array.isArray(value));
+    let originalSrc: any = arraysOnly[arraysOnly.length - 1][0];
+
+    const newSrc = client.buildURL(
+        path,
+        {
+            w: originalSrc.width,
+            h: originalSrc.height,
+            "fp-x": focalPointX,
+            "fp-y": focalPointY,
+            fm: "webp",
+            q: 95
+        }
+    );
+
+    const newSrcSet = client.buildSrcSet(
+        path,
+        {
+            w: originalSrc.width,
+            h: originalSrc.height,
+            "fp-x": focalPointX,
+            "fp-y": focalPointY,
+            fm: "webp"
+        },
+        {
+            devicePixelRatios: dpr,
+            variableQualities: quality
+        },
+    );
 
     return (
-        <Picture>
+        <picture>
             {Object.entries(src).map(([mediaQuery, mediaArray], index) => (
                 <React.Fragment key={index}>
-                    {(mediaArray as any[]).map((media, subIndex) => (
-                        <Source
-                            key={subIndex}
-                            src={url}
-                            width={media.width}
-                            height={media.height}
-                            imgixParams={{
+                    {(mediaArray as any[]).map((media, subIndex) => {
+                        const srcset = client.buildSrcSet(
+                            path,
+                            {
+                                w: media.width,
+                                h: media.height,
                                 "fp-x": focalPointX,
                                 "fp-y": focalPointY,
-                                "fm": "avif"
-                            }}
-                            htmlAttributes={{ media: mediaQuery, type: 'image/avif' }}
-                            disableLibraryParam={true}
-                        />
-                    ))}
-                    {(mediaArray as any[]).map((media, subIndex) => (
-                        <Source
+                                fm: "avif"
+                            },
+                            {
+                                devicePixelRatios: dpr,
+                                variableQualities: quality
+                            },
+                        );
+                        return (
+                        <source
                             key={subIndex}
-                            src={url}
+                            srcSet={srcset}
                             width={media.width}
                             height={media.height}
-                            imgixParams={{
+                            media={mediaQuery}
+                            type={`image/avif`}
+                        />
+                    )})}
+                    {(mediaArray as any[]).map((media, subIndex) => {
+                        const srcset = client.buildSrcSet(
+                            path,
+                            {
+                                w: media.width,
+                                h: media.height,
                                 "fp-x": focalPointX,
                                 "fp-y": focalPointY,
-                                "fm": "webp"
-                            }}
-                            htmlAttributes={{ media: mediaQuery, type: 'image/webp' }}
-                            disableLibraryParam={true}
-                        />
-                    ))}
+                                fm: "webp"
+                            },
+                            {
+                                devicePixelRatios: dpr,
+                                variableQualities: quality
+                            },
+                        );
+                        return (
+                            <source
+                                key={subIndex}
+                                srcSet={srcset}
+                                width={media.width}
+                                height={media.height}
+                                media={mediaQuery}
+                                type={`image/webp`}
+                            />
+                        )})}
                 </React.Fragment>
             ))}
-            <Imgix
-                src={url}
-                imgixParams={{
-                    w: src[Object.keys(src)[0]][0].width,
-                    h: src[Object.keys(src)[0]][0].height,
-                    "fp-x": focalPointX,
-                    "fp-y": focalPointY
-                }}
-                htmlAttributes={{
-                    alt: alt,
-                    width: src[Object.keys(src)[0]][0].width,
-                    height: src[Object.keys(src)[0]][0].height,
-                    ...props
-                }}
+            <img
+                src={newSrc}
+                srcSet={newSrcSet}
+                width={src.width}
+                height={src.height}
                 className={className}
-                disableLibraryParam={true}
+                alt={alt}
             />
-        </Picture>
+        </picture>
     )
 }
 
