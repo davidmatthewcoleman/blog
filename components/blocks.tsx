@@ -4,9 +4,7 @@ import parse from 'html-react-parser';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import React from "react";
-import dynamic from 'next/dynamic';
-
-const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
+import WpImage from '@/components/wpImage';
 
 function Blocks({ data }: { data: any }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);

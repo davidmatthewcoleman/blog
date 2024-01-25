@@ -6,9 +6,7 @@ import {any} from "prop-types";
 import parse from "html-react-parser";
 import Head from "next/head";
 import React from "react";
-import dynamic from 'next/dynamic';
-
-const WpImage = dynamic(() => import('@/components/wpImage'), { ssr: true });
+import WpImage from '@/components/wpImage';
 
 function Search({ menu, options, latestPosts, allPosts, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, head: any, query: string }) {
     let transformedData: any = [];
