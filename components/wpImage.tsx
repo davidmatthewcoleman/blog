@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import ImgixClient from '@imgix/js-core';
 
-const WpImage = ({ url, src, className, alt, focalPoint }: { url: string, src: any, className: string, alt: string, focalPoint: any }) => {
+const WpImage = ({ url, src, className, alt, focalPoint, props }: { url: string, src: any, className: string, alt: string, focalPoint: any, props: any }) => {
     const client = useMemo(() => new ImgixClient({
         domain: process.env.IMGIX_HOST as string,
         secureURLToken: process.env.IMGIX_TOKEN as string,
@@ -103,6 +103,7 @@ const WpImage = ({ url, src, className, alt, focalPoint }: { url: string, src: a
                 height={originalSrc.height}
                 className={className}
                 alt={alt}
+                props{...props}
             />
         </picture>
     );
