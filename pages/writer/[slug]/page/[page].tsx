@@ -99,8 +99,8 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=8&page=${pageNumber}&filter[author_name]=${params.slug}`).then(res => res.json()),
-        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`)
+        fetchPosts(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=8&page=${pageNumber}&filter[author_name]=${params.slug}`),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/users?slug=${params.slug}`).then(res => res.json())
     ]);
 
     const allPosts = allPostsData.posts;
