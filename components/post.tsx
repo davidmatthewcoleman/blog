@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
 
 interface PostProps {
     data: any;

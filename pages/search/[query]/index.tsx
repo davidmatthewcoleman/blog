@@ -3,9 +3,9 @@ import parse from "html-react-parser";
 import React from "react";
 import dynamic from 'next/dynamic';
 
-const Header = dynamic(() => import('@/components/header'), { ssr: true });
-const PostList = dynamic(() => import('@/components/postList'), { ssr: true });
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const Header = dynamic(() => import('@/components/header'), { ssr: false });
+const PostList = dynamic(() => import('@/components/postList'), { ssr: false });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
 function Search({ menu, options, latestPosts, allPosts, totalPages, head, query }: { menu: any, options: any, latestPosts: any, allPosts: any, totalPages: number, head: any, query: string }) {
     let transformedData: any = [];
 

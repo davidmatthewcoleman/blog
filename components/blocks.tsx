@@ -5,7 +5,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
 function Blocks({ data }: { data: any }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState('');

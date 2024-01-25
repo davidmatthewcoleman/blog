@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import dynamic from "next/dynamic";
 import {NEXT_URL} from "next/dist/client/components/app-router-headers"; // Import useRouter for handling URL navigation
 
-const Post = dynamic(() => import('@/components/post'), { ssr: true });
-const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: true });
-const Footer = dynamic(() => import('@/components/footer'), { ssr: true });
+const Post = dynamic(() => import('@/components/post'), { ssr: false });
+const PostNoBanner = dynamic(() => import('@/components/postNoBanner'), { ssr: false });
+const Footer = dynamic(() => import('@/components/footer'), { ssr: false });
 
 function PostList({ allPosts, header, options, pageNumber = 1, totalPages }: { allPosts: any, header: any, options: any, pageNumber: number, totalPages: number }) {
     const router = useRouter(); // Initialize useRouter

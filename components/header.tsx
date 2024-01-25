@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import parse from "html-react-parser";
 import dynamic from 'next/dynamic';
 
-const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: true });
+const WpImage = dynamic(() => import('@/components/WpImage'), { ssr: false });
 function Header({menu, options, latestPosts}: {menu: any, options: any, latestPosts: any}) {
     const [headerState, setHeader] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
