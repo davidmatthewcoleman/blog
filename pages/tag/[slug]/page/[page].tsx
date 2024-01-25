@@ -92,7 +92,7 @@ export async function getStaticProps({ params }: any) {
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/menu/${menus?.primary}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=5`).then(res => res.json()),
-        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?filter[taxonomy]=post_tag&filter[term]=${params.slug}`).then(res => res.json()),
+        fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/posts?per_page=9999&filter[taxonomy]=post_tag&filter[term]=${params.slug}`).then(res => res.json()),
         fetch(`${process.env.WORDPRESS_HOST}/api/wp/v2/tags?per_page=9999&slug=${params.slug}`).then(res => res.json())
     ]);
 
