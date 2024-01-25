@@ -84,6 +84,7 @@ const GetImage = ({ url, src, className, alt, focalPoint, props }: { url: string
                 height={(Object.values(src).pop() as any)[0].height}
                 className={`transition-opacity ${loaded ? 'opacity-100' : 'opacity-0'} ${className}`}
                 alt={alt}
+                loading="eager"
                 {...props}
             />
         </picture>
