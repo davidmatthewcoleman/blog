@@ -1,27 +1,23 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ImgixClient from '@imgix/js-core';
 
-const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, src: any, className: string, alt: string, focalPoint: any, props: any}) => {
-    const client = new ImgixClient({
+const WpImage = ({ url, src, className, alt, focalPoint }: { url: string, src: any, className: string, alt: string, focalPoint: any }) => {
+    const client = useMemo(() => new ImgixClient({
         domain: process.env.IMGIX_HOST as string,
         secureURLToken: process.env.IMGIX_TOKEN as string,
         includeLibraryParam: false
-    });
+    }), []);
 
-    const path = url.replace(`${process.env.WORDPRESS_HOST}/wp-content/uploads/`, '');
+    const path = useMemo(() => url.replace(`${process.env.WORDPRESS_HOST}/wp-content/uploads/`, ''), [url]);
 
-    const [focalPointX, focalPointY] = focalPoint.map((value: any) => parseFloat((value / 100).toFixed(2)));
-    const dpr: any = [1,2,3];
-    const quality: any = {
-        1: 95,
-        2: 90,
-        3: 85
-    }
+    const [focalPointX, focalPointY] = useMemo(() => focalPoint.map((value: any) => parseFloat((value / 100).toFixed(2))), [focalPoint]);
+    const dpr = [1, 2, 3];
+    const quality = { 1: 95, 2: 90, 3: 85 };
 
-    let arraysOnly: any = Object.values(src).filter(value => Array.isArray(value));
-    let originalSrc: any = arraysOnly[arraysOnly.length - 1][0];
+    const arraysOnly: any = useMemo(() => Object.values(src).filter(value => Array.isArray(value)), [src]);
+    const originalSrc: any = useMemo(() => arraysOnly[arraysOnly.length - 1][0], [arraysOnly]);
 
-    const newSrc = client.buildURL(
+    const newSrc = useMemo(() => client.buildURL(
         path,
         {
             w: originalSrc.width,
@@ -31,9 +27,9 @@ const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, sr
             fm: "webp",
             q: 95
         }
-    );
+    ), [client, path, originalSrc, focalPointX, focalPointY]);
 
-    const newSrcSet = client.buildSrcSet(
+    const newSrcSet = useMemo(() => client.buildSrcSet(
         path,
         {
             w: originalSrc.width,
@@ -45,75 +41,71 @@ const WpImage = ({url, src, className, alt, focalPoint, props}: {url: string, sr
         {
             devicePixelRatios: dpr,
             variableQualities: quality
-        },
-    );
+        }
+    ), [client, path, originalSrc, focalPointX, focalPointY, dpr, quality]);
 
     return (
         <picture>
             {Object.entries(src).map(([mediaQuery, mediaArray], index) => (
                 <React.Fragment key={index}>
-                    {(mediaArray as any[]).map((media, subIndex) => {
-                        const srcset = client.buildSrcSet(
-                            path,
-                            {
-                                w: media.width,
-                                h: media.height,
-                                "fp-x": focalPointX,
-                                "fp-y": focalPointY,
-                                fm: "avif"
-                            },
-                            {
-                                devicePixelRatios: dpr,
-                                variableQualities: quality
-                            },
-                        );
-                        return (
-                        <source
-                            key={subIndex}
-                            srcSet={srcset}
-                            width={media.width}
-                            height={media.height}
-                            media={mediaQuery}
-                            type={`image/avif`}
-                        />
-                    )})}
-                    {(mediaArray as any[]).map((media, subIndex) => {
-                        const srcset = client.buildSrcSet(
-                            path,
-                            {
-                                w: media.width,
-                                h: media.height,
-                                "fp-x": focalPointX,
-                                "fp-y": focalPointY,
-                                fm: "webp"
-                            },
-                            {
-                                devicePixelRatios: dpr,
-                                variableQualities: quality
-                            },
-                        );
-                        return (
+                    {(mediaArray as any).map((media: any, subIndex: any) => (
+                        <>
                             <source
                                 key={subIndex}
-                                srcSet={srcset}
+                                srcSet={client.buildSrcSet(
+                                    path,
+                                    {
+                                        w: media.width,
+                                        h: media.height,
+                                        "fp-x": focalPointX,
+                                        "fp-y": focalPointY,
+                                        fm: "avif"
+                                    },
+                                    {
+                                        devicePixelRatios: dpr,
+                                        variableQualities: quality
+                                    }
+                                )}
                                 width={media.width}
                                 height={media.height}
                                 media={mediaQuery}
-                                type={`image/webp`}
+                                type="image/avif"
                             />
-                        )})}
+                            <source
+                                key={subIndex}
+                                srcSet={client.buildSrcSet(
+                                    path,
+                                    {
+                                        w: media.width,
+                                        h: media.height,
+                                        "fp-x": focalPointX,
+                                        "fp-y": focalPointY,
+                                        fm: "webp"
+                                    },
+                                    {
+                                        devicePixelRatios: dpr,
+                                        variableQualities: quality
+                                    }
+                                )}
+                                width={media.width}
+                                height={media.height}
+                                media={mediaQuery}
+                                type="image/webp"
+                            />
+                        </>
+                    ))}
                 </React.Fragment>
             ))}
             <img
                 src={newSrc}
                 srcSet={newSrcSet}
-                width={src.width}
-                height={src.height}
+                width={originalSrc.width}
+                height={originalSrc.height}
                 className={className}
                 alt={alt}
             />
         </picture>
-    )
-}
+    );
+};
 
 export default WpImage;
